@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+                     "http://xml.resource.org/authoring/rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC6066 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6066.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="no" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<?rfc private="Draft" ?>
+<?rfc comments="no"?>
+<?rfc inline="no"?>
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="info" docName="draft-balfanz-tls-obc-00" >
+  <!-- ***** FRONT MATTER ***** -->
+  <front>
+    <title abbrev="TLS OBC">TLS Origin-Bound Certificates</title>
+    <author fullname="Dirk Balfanz" initials="D.B." role="editor" surname="Balfanz">
+      <organization>Google Inc.</organization>
+      <address>
+        <postal>
+          <street>1600 Ampitheatre Parkway</street>
+          <!-- Reorder these if your country does things differently -->
+          <city>Mountain View</city>
+          <region>CA</region>
+          <code/>
+          <country>USA</country>
+        </postal>
+        <phone/>
+        <email>balfanz@google.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+    <author fullname="D K Smetters" initials="D.S." surname="Smetters">
+      <organization>Google Inc.</organization>
+    </author>
+    <author fullname="Mayank Upadhyay" initials="M.U." surname="Upadhyay">
+      <organization>Google Inc.</organization>
+    </author>
+    <author fullname="Adam Barth" initials="A.B." surname="Barth">
+      <organization>Google Inc.</organization>
+    </author>
+    <date month="March" year="2011"/>
+    <!-- Meta-data Declarations -->
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <keyword>TLS</keyword>
+    <keyword>PKI</keyword>
+    <abstract>
+      <t>This document specifies a Transport Layer Security (TLS)
+      extension and associated semantics that allow clients and
+      servers to negotiate the use of origin-bound, self-signed
+      certificates for TLS client authentication.</t>
+    </abstract>
+  </front>
+  <middle>
+
+    <section title="Introduction">
+      <t>Transport Layer Security (<xref target="RFC5246">TLS</xref>)
+      allows clients to authenticate themselves using Client
+      Certificates. In practice, clients tend to ask for user consent
+      before using Client Certificates. This is to allay privacy
+      concerns about user-identifying information in the Client
+      Certificate, and also to let the user choose among possibly many
+      certificates that can be used by the client for the TLS
+      session.</t>
+
+      <t>The user experience of obtaining this consent, along with
+      that of obtaining the certificates in the first place, has
+      traditionally presented a hurdle to user adoption. Additionally,
+      operational constraints on the server side can make it difficult
+      for service providers to switch from a cookie-based
+      authentication scheme to certificate-based TLS client
+      authentication.</t>
+
+      <t>The TLS Origin-Bound Certificates extension (TLS-OBC) is a
+      <xref target="RFC6066">TLS extension</xref> that allows clients
+      to use certificate-based client authentication without having to
+      obtain user consent before using certificates. A client creates
+      at most one (self-signed) certificate of any given type per
+      <xref target="WebOrigin">web origin</xref>, and does not include
+      user-identifying information into such <spanx>origin-bound
+      certificates</spanx>, thus making user consent and user-assisted
+      certificate selection unnecessary.</t>
+
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described
+        in <xref target="RFC2119">RFC 2119</xref>.</t>
+      </section>
+    </section>
+
+    <section title="Origin-Bound Certificates">
+      <t>An origin-bound certificate is a self-issued certificate that
+      the client uses for TLS client authentication for a particular
+      <xref target="WebOrigin">web origin</xref>. Origin-bound
+      certificates MUST be self-signed, i.e., a private key
+      corresponding to the certified public key MUST be used to sign
+      the certificate.</t>
+      
+      <t>Clients SHOULD NOT re-use the same origin-bound certificate
+      for more than one web origin.</t>
+      
+      <section title="Certificate Creation">
+	<t>Clients create origin-bound certificates when asked to
+        perform TLS client authentication after negotiating the <spanx
+        style="verb">ob_cert</spanx> extension with a server (see
+        <xref target="ClientCertificateMessage"/>). When creating an
+        origin-bound certificate, it is RECOMMENDED that clients use
+        the <xref target="WebOrigin">Unicode Serialization</xref> of
+        the certificate's web origin as the common name of the
+        Distinguished Name of both the certificate's Issuer and
+        Subject.</t>
+      
+	<t>Origin-bound certificates MUST include the following
+        critical extension: TODO[FILL IN DETAILS]</t>	
+      </section>
+
+      <section title="Key Rotation">
+	<t>After a client has created an origin-bound certificate for
+	a certain web origin, the client SHOULD re-use the certificate
+	for a period of time, and then discard it.</t>
+
+	<t>It is RECOMMENDED that clients pick a lifetime for the
+	new certificate between one month and one year (perhaps
+	depending on an assessment of how well the private key is
+	protected on the host platform). The client SHALL use the
+	not-before and not-after fields in the new certificate to
+	record the lifetime of the new certificate.</t>
+      </section>
+    </section>
+    
+    <section title="Changes to The Handshake Message Contents">
+      <section title="Client Hello">
+	<t>To indicate support for origin-bound certificates, the
+	client includes an extension of type <spanx
+	style="verb">ob_cert</spanx> to the extended Client Hello
+	message. The <spanx style="verb">ob_cert</spanx> TLS
+	extension is assigned value X from the TLS ExtensionType
+	registry, and uses no <spanx
+	style="verb">extension_data</spanx>.</t>
+      </section>
+
+      <section title="Server Hello" >
+	<t>A server that receives a Client Hello message containing
+	the <spanx style="verb">ob_cert</spanx> extension MAY choose
+	to include the same extension in the extended Server Hello
+	message. If it does, the client and server are considered to
+	have negotiated origin-bound client certificates for the
+	session. Whenever the client is asked to perform client
+	authentication during such a session, it MUST use an
+	origin-bound certificate.</t>
+      </section>
+
+      <section title="Certificate Request">	
+	<t>A server MAY choose to send a Certificate Request message
+	to the client. If the session uses origin-bound client
+	certificates, the server SHOULD use an empty <spanx
+	style="verb">certificate_authorities</spanx> list.</t>
+
+	<t>A client that receives a Certificate Request during a
+	session for which origin-bound client certificates were
+	negotiated MUST ignore the <spanx
+	style="verb">certificate_authorities</spanx> list.</t>
+      </section>
+
+      <section anchor="ClientCertificateMessage" title="Client Certificate">
+	<t>A client that receives a Certificate Request message MUST
+	send a Client Certificate message in response. If client and
+	server negotiated origin-bound client certificates, then the
+	client SHOULD include a certificate in the Client Certificate
+	message.</t>
+	
+	<t>If a client includes one or more certificates in the Client
+	Certificate message during a session for which origin-bound
+	client certificates were negotiated, each included
+	certificate MUST 
+        <list style="symbols">
+	    <t>be an origin-bound certificate for the web origin of
+	    the server, and </t> 
+
+	    <t>match a certificate type requested by the server in the
+	    Certificate Request message.</t>
+	</list></t>
+
+	<t>If a client doesn't possess a certificate meeting the above
+	requirements, it SHOULD self-issue a certificate of a type
+	requested by the server in the Certificate Request message and
+	include the newly-generated certificate in the Client
+	Certificate message. Only if the client is not capable of
+	generating a certificate of the requested type SHOULD it
+	include an empty <spanx style="verb">certificate_list</spanx>
+	in the Client Certificate message.</t>
+      </section>
+    </section>
+  </middle>
+  <!-- *****BACK MATTER ***** -->
+  <back>
+    <references>
+      &RFC2119;
+
+      &RFC5246;
+
+      &RFC6066;
+
+     <reference anchor="WebOrigin"
+	target="http://tools.ietf.org/html/draft-abarth-origin-09">
+	<front>
+	  <title>The Web Origin Concept</title>
+	  <author initials="A.B." surname="Barth" fullname="Adam Barth">
+	  </author>
+	</front>
+      </reference>
+
+    </references>
+    <!-- Change Log
+
+  -->
+  </back>
+</rfc>
