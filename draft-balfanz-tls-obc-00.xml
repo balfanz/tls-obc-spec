@@ -98,22 +98,43 @@
     </section>
 
     <section title="Origin-Bound Certificates">
-      <t>An Origin-bound certificate is a self-issued certificate that
+      <t>An origin-bound certificate is a self-issued certificate that
       the client uses for TLS client authentication for a particular
       <xref target="WebOrigin">web origin</xref>. Origin-bound
       certificates MUST be self-signed, i.e., a private key
       corresponding to the certified public key MUST be used to sign
-      the certificate.</t> 
+      the certificate.</t>
       
       <t>Clients SHOULD NOT re-use the same origin-bound certificate
-      for more than one web origin. When creating an origin-bound
-      certificate, clients MAY use the <xref
-      target="WebOrigin">Unicode Serialization</xref> of the
-      certificate's web origin as the common name of the Distinguished
-      Name of both the certificate's Issuer and Subject.</t>
+      for more than one web origin.</t>
       
-      <t>Origin-bound certificates MUST include the following
-      extension: TODO[FILL IN DETAILS]</t>
+      <section title="Certificate Creation">
+	<t>Clients create origin-bound certificates when asked to
+        perform TLS client authentication after negotiating the <spanx
+        style="verb">ob_cert</spanx> extension with a server (see
+        <xref target="ClientCertificateMessage"/>). When creating an
+        origin-bound certificate, it is RECOMMENDED that clients use
+        the <xref target="WebOrigin">Unicode Serialization</xref> of
+        the certificate's web origin as the common name of the
+        Distinguished Name of both the certificate's Issuer and
+        Subject.</t>
+      
+	<t>Origin-bound certificates MUST include the following
+        critical extension: TODO[FILL IN DETAILS]</t>	
+      </section>
+
+      <section title="Key Rotation">
+	<t>After a client has created an origin-bound certificate for
+	a certain web origin, the client SHOULD re-use the certificate
+	for a period of time, and then discard it.</t>
+
+	<t>It is RECOMMENDED that clients pick a lifetime for the
+	new certificate between one month and one year (perhaps
+	depending on an assessment of how well the private key is
+	protected on the host platform). The client SHALL use the
+	not-before and not-after fields in the new certificate to
+	record the lifetime of the new certificate.</t>
+      </section>
     </section>
     
     <section title="Changes to The Handshake Message Contents">
@@ -127,7 +148,7 @@
 	style="verb">extension_data</spanx>.</t>
       </section>
 
-      <section title="Server Hello">
+      <section title="Server Hello" >
 	<t>A server that receives a Client Hello message containing
 	the <spanx style="verb">ob_cert</spanx> extension MAY choose
 	to include the same extension in the extended Server Hello
@@ -150,7 +171,7 @@
 	style="verb">certificate_authorities</spanx> list.</t>
       </section>
 
-      <section title="Client Certificate">
+      <section anchor="ClientCertificateMessage" title="Client Certificate">
 	<t>A client that receives a Certificate Request message MUST
 	send a Client Certificate message in response. If client and
 	server negotiated origin-bound client certificates, then the
@@ -174,9 +195,9 @@
 	requested by the server in the Certificate Request message and
 	include the newly-generated certificate in the Client
 	Certificate message. Only if the client is not capable of
-	generating a certificate of the requested type MAY it include
-	an empty <spanx style="verb">certificate_list</spanx> in the
-	Client Certificate message.</t>
+	generating a certificate of the requested type SHOULD it
+	include an empty <spanx style="verb">certificate_list</spanx>
+	in the Client Certificate message.</t>
       </section>
     </section>
   </middle>

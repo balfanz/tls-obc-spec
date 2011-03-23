@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en"><head><title>Draft: TLS Origin-Bound Certificates</title>
-<meta http-equiv="Expires" content="Wed, 23 Mar 2011 02:05:41 +0000">
+<meta http-equiv="Expires" content="Wed, 23 Mar 2011 05:36:07 +0000">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="TLS Origin-Bound Certificates">
 <meta name="keywords" content="TLS, PKI">
@@ -167,15 +167,19 @@ Introduction<br />
 Requirements Language<br />
 <a href="#anchor3">2.</a>&nbsp;
 Origin-Bound Certificates<br />
-<a href="#anchor4">3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">2.1.</a>&nbsp;
+Certificate Creation<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">2.2.</a>&nbsp;
+Key Rotation<br />
+<a href="#anchor6">3.</a>&nbsp;
 Changes to The Handshake Message Contents<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">3.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">3.1.</a>&nbsp;
 Client Hello<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">3.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">3.2.</a>&nbsp;
 Server Hello<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">3.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">3.3.</a>&nbsp;
 Certificate Request<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">3.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ClientCertificateMessage">3.4.</a>&nbsp;
 Client Certificate<br />
 <a href="#rfc.references1">4.</a>&nbsp;
 References<br />
@@ -231,7 +235,7 @@ Requirements Language</h3>
 <a name="rfc.section.2"></a><h3>2.&nbsp;
 Origin-Bound Certificates</h3>
 
-<p>An Origin-bound certificate is a self-issued certificate that
+<p>An origin-bound certificate is a self-issued certificate that
       the client uses for TLS client authentication for a particular
       <a class='info' href='#WebOrigin'>web origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin]. Origin-bound
       certificates MUST be self-signed, i.e., a private key
@@ -239,20 +243,47 @@ Origin-Bound Certificates</h3>
       the certificate.
 </p>
 <p>Clients SHOULD NOT re-use the same origin-bound certificate
-      for more than one web origin. When creating an origin-bound
-      certificate, clients MAY use the <a class='info' href='#WebOrigin'>Unicode Serialization<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin] of the
-      certificate's web origin as the common name of the Distinguished
-      Name of both the certificate's Issuer and Subject.
-</p>
-<p>Origin-bound certificates MUST include the following
-      extension: TODO[FILL IN DETAILS]
+      for more than one web origin.
 </p>
 <a name="anchor4"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.2.1"></a><h3>2.1.&nbsp;
+Certificate Creation</h3>
+
+<p>Clients create origin-bound certificates when asked to
+        perform TLS client authentication after negotiating the <tt>ob_cert</tt> extension with a server (see
+        <a class='info' href='#ClientCertificateMessage'>Section&nbsp;3.4<span> (</span><span class='info'>Client Certificate</span><span>)</span></a>). When creating an
+        origin-bound certificate, it is RECOMMENDED that clients use
+        the <a class='info' href='#WebOrigin'>Unicode Serialization<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin] of
+        the certificate's web origin as the common name of the
+        Distinguished Name of both the certificate's Issuer and
+        Subject.
+</p>
+<p>Origin-bound certificates MUST include the following
+        critical extension: TODO[FILL IN DETAILS]
+</p>
+<a name="anchor5"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.2.2"></a><h3>2.2.&nbsp;
+Key Rotation</h3>
+
+<p>After a client has created an origin-bound certificate for
+	a certain web origin, the client SHOULD re-use the certificate
+	for a period of time, and then discard it.
+</p>
+<p>It is RECOMMENDED that clients pick a lifetime for the
+	new certificate between one month and one year (perhaps
+	depending on an assessment of how well the private key is
+	protected on the host platform). The client SHALL use the
+	not-before and not-after fields in the new certificate to
+	record the lifetime of the new certificate.
+</p>
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3"></a><h3>3.&nbsp;
 Changes to The Handshake Message Contents</h3>
 
-<a name="anchor5"></a><br /><hr />
+<a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
 Client Hello</h3>
@@ -263,7 +294,7 @@ Client Hello</h3>
 	extension is assigned value X from the TLS ExtensionType
 	registry, and uses no <tt>extension_data</tt>.
 </p>
-<a name="anchor6"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
 Server Hello</h3>
@@ -277,7 +308,7 @@ Server Hello</h3>
 	authentication during such a session, it MUST use an
 	origin-bound certificate.
 </p>
-<a name="anchor7"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
 Certificate Request</h3>
@@ -290,7 +321,7 @@ Certificate Request</h3>
 	session for which origin-bound client certificates were
 	negotiated MUST ignore the <tt>certificate_authorities</tt> list.
 </p>
-<a name="anchor8"></a><br /><hr />
+<a name="ClientCertificateMessage"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.4"></a><h3>3.4.&nbsp;
 Client Certificate</h3>
@@ -320,9 +351,9 @@ Client Certificate</h3>
 	requested by the server in the Certificate Request message and
 	include the newly-generated certificate in the Client
 	Certificate message. Only if the client is not capable of
-	generating a certificate of the requested type MAY it include
-	an empty <tt>certificate_list</tt> in the
-	Client Certificate message.
+	generating a certificate of the requested type SHOULD it
+	include an empty <tt>certificate_list</tt>
+	in the Client Certificate message.
 </p>
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
