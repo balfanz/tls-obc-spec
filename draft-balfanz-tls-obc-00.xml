@@ -116,15 +116,14 @@
 	and they do not already have a valid origin-bound certificate
 	for that origin available for use.</t>
 
-	<t>Clients SHOULD NOT re-use the same key pair with more than
-	  one origin-bound certificate. To do so would violate the
-	  privacy properties required by origin-bound
-	  certificates.</t>
+	<t>Clients SHOULD NOT re-use the same key pair for more than
+        one origin-bound certificate. To do so would violate the
+        privacy properties required by origin-bound certificates.</t>
       
 	<t>When creating an origin-bound certificate, it is
         RECOMMENDED that clients use the PrintableString representation
 	of "Anonymous" as the common name component of the Distinguished
-	Name of both the certificate's Issue and Subject, with no other
+	Name of both the certificate's Issuer and Subject, with no other
 	name components present.</t>
       
 	<t>It is RECOMMENDED that clients pick a lifetime for the
@@ -134,24 +133,26 @@
 	notBefore and notAfter fields in the new certificate to
 	record the lifetime of the new certificate.</t>
 
-	<t>Origin-bound certificates MUST be X.509 v3 certificates,
+	<section title="Origin-Bound Certificate Extension">
+	
+	  <t>Origin-bound certificates MUST be X.509 v3 certificates,
 	  and MUST include the origin-bound certificate extension (OID
 	  1.3.6.1.4.111129.2.1.6), shown below.  This extension MUST
 	  be marked critical.</t>
 
-        <t>The data of the extension will be
-        the <xref target="WebOrigin">ASCII Serialization</xref> of the
-        certificate's <xref target="WebOrigin">web origin</xref> as an
-        IA5String.</t>
+	  <t>The data of the extension will be the <xref
+          target="WebOrigin">ASCII Serialization</xref> of the
+          certificate's <xref target="WebOrigin">web origin</xref> as
+          an IA5String.</t>
 
-	<figure anchor='figure_extension'>
-	  <artwork>
+	  <figure anchor='figure_extension'>
+	    <artwork>
    id-ce-originBoundCertificate OBJECT IDENTIFIER ::= { enterprises Google 2 1 6 }
 
    OriginBoundCertificate ::= IA5String
-	  </artwork>
-	</figure>
-
+	    </artwork>
+	  </figure>
+	</section>
       </section>
 
       <section title="Certificate and Key Rotation">
@@ -178,16 +179,16 @@
     
     <section title="Changes to The Handshake Message Contents">
       <section title="Extension Definition">
-	<t>This document defines a new TLS extension,
-	"ob_cert" <spanx style="verb">ob_cert</spanx> (with tentative
-	extension type 0xff0f), which indicates that client and server
-	agree to allow the client to use an origin-bound certificate
-	to authenticate itself to the server.</t>
-	<t>To indicate support for origin-bound certificates, the
-	client includes an extension of
-	type <spanx style="verb">ob_cert</spanx> to the Extended
-	Client Hello and Extended Server Hello
-	messages.</t>
+	<t>This document defines a new TLS extension, <spanx
+	style="verb">ob_cert</spanx> (with tentative extension type
+	0xff0f), which indicates that client and server agree to allow
+	the client to use an origin-bound certificate to authenticate
+	itself to the server.</t> <t>To indicate support for
+	origin-bound certificates, the client includes an extension of
+	type <spanx style="verb">ob_cert</spanx> in the Extended
+	Client Hello message. To request client authentication with an
+	origin-bound certificate, the server includes the same
+	extension in Extended Server Hello message.</t>
 
 	<t>The <spanx style="verb">ob_cert</spanx> TLS extension will
 	be assigned a value from the TLS ExtensionType registry, and
@@ -267,7 +268,7 @@
 	  server SHOULD ignore the Issuer and Subject in the presented
 	  certificate.</t>
 
-DKS:citations:	<t>Finally, the server MUST verify that the certificate contains
+        <t>Finally, the server MUST verify that the certificate contains
 	  the origin-bound extension, and SHOULD verify that the origin
 	  identified in that certificate could be considered to apply to
 	  it for the purposes of this connection (given constraints applied
