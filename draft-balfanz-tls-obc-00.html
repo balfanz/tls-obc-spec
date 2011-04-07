@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en"><head><title>Draft: TLS Origin-Bound Certificates</title>
-<meta http-equiv="Expires" content="Thu, 07 Apr 2011 19:37:41 +0000">
+<meta http-equiv="Expires" content="Thu, 07 Apr 2011 19:44:11 +0000">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="TLS Origin-Bound Certificates">
 <meta name="keywords" content="TLS, PKI">
@@ -396,10 +396,12 @@ Certificate Request</h3>
 <a name="rfc.section.3.5"></a><h3>3.5.&nbsp;
 Client Certificate</h3>
 
-<p>A client that receives a Certificate Request message MUST
-	send a Client Certificate message in response. If client and
-	server negotiated origin-bound client certificates, then the
-	client SHOULD include a certificate in the Client Certificate
+<p><a class='info' href='#RFC5246'>TLS<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a> [RFC5246] requires that a client
+	that receives a Certificate Request message must send a Client
+	Certificate message in response (which may or may not include
+	client certificates). If client and server negotiated
+	origin-bound client certificates, then the client SHOULD
+	include exactly one certificate in the Client Certificate
 	message.
 </p>
 <p>If a client includes a certificate in the Client

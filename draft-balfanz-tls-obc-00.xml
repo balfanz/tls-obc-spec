@@ -232,10 +232,12 @@
       </section>
 
       <section anchor="ClientCertificateMessage" title="Client Certificate">
-	<t>A client that receives a Certificate Request message MUST
-	send a Client Certificate message in response. If client and
-	server negotiated origin-bound client certificates, then the
-	client SHOULD include a certificate in the Client Certificate
+	<t><xref target="RFC5246">TLS</xref> requires that a client
+	that receives a Certificate Request message must send a Client
+	Certificate message in response (which may or may not include
+	client certificates). If client and server negotiated
+	origin-bound client certificates, then the client SHOULD
+	include exactly one certificate in the Client Certificate
 	message.</t>
 	
 	<t>If a client includes a certificate in the Client
