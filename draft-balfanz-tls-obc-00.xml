@@ -238,9 +238,9 @@
 	client SHOULD include a certificate in the Client Certificate
 	message.</t>
 	
-	<t>If a client includes one or more certificates in the Client
+	<t>If a client includes a certificate in the Client
 	Certificate message during a session for which origin-bound
-	client certificates were negotiated, each included
+	client certificates were negotiated, the included
 	certificate MUST 
         <list style="symbols">
 	    <t>be an origin-bound certificate for the web origin of
