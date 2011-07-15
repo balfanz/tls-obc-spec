@@ -190,12 +190,14 @@
 	style="verb">ob_cert</spanx> (with tentative extension type
 	0xff0f), which indicates that client and server agree to allow
 	the client to use an origin-bound certificate to authenticate
-	itself to the server.</t> <t>To indicate support for
-	origin-bound certificates, the client includes an extension of
-	type <spanx style="verb">ob_cert</spanx> in the Extended
-	Client Hello message. To request client authentication with an
-	origin-bound certificate, the server includes the same
-	extension in Extended Server Hello message.</t>
+	itself to the server.</t> 
+
+	<t>To indicate support for origin-bound certificates, the
+	client includes an extension of type <spanx
+	style="verb">ob_cert</spanx> in the Extended Client Hello
+	message. To request client authentication with an origin-bound
+	certificate, the server includes the same extension in
+	Extended Server Hello message.</t>
 
 	<t>The <spanx style="verb">ob_cert</spanx> TLS extension will
 	be assigned a value from the TLS ExtensionType registry, and
@@ -203,15 +205,15 @@
 	length <spanx style="verb">extension_data</spanx>. For
 	testing, we will use the extension type value of 0xff0f. For
 	this type value, the entire encoding of the extension will be
-	ff 0f 00 01 00.
+	ff 0f 00 00 00.
        </t>
       </section>
 
       <section title="Client Hello">
-	<t>A client wishing to use an origin-bound client certificate
-	  with a server from a particular web origin MUST include the
-	  <spanx style="verb">ob_cert</spanx> in the extended Client
-	  Hello message.
+	<t>A client wishing to indicate support for origin-bound
+        client certificates MUST include the <spanx
+        style="verb">ob_cert</spanx> in the extended Client Hello
+        message to a server from a particular web origin.
 	</t>
       </section>
 
@@ -221,9 +223,7 @@
 	to include the same extension in the extended Server Hello
 	message. If it does, the client and server are considered to
 	have negotiated origin-bound client certificates for the
-	session. Whenever the client is asked to perform client
-	authentication during such a session, it MUST use an
-	origin-bound certificate.</t>
+	session.</t>
       </section>
 
       <section title="Certificate Request">	
