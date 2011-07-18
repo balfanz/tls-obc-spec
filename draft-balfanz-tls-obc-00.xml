@@ -6,18 +6,18 @@
 <!ENTITY RFC6066 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6066.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<?rfc strict="no" ?>
+
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<?rfc private="Draft" ?>
+
 <?rfc comments="no"?>
 <?rfc inline="no"?>
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-balfanz-tls-obc-00" >
+<rfc ipr="trust200902" docName="draft-balfanz-tls-obc-00">
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="TLS OBC">TLS Origin-Bound Certificates</title>
@@ -46,7 +46,7 @@
     <author fullname="Adam Barth" initials="A.B." surname="Barth">
       <organization>Google Inc.</organization>
     </author>
-    <date month="March" year="2011"/>
+    <date month="July" year="2011"/>
     <!-- Meta-data Declarations -->
     <area>General</area>
     <workgroup>Internet Engineering Task Force</workgroup>
@@ -154,9 +154,11 @@
 
 	  <figure anchor='figure_extension'>
 	    <artwork>
-   id-ce-originBoundCertificate OBJECT IDENTIFIER ::= { enterprises Google 2 1 6 }
+ id-ce-originBoundCertificate OBJECT IDENTIFIER ::=
+         { enterprises Google 2 1 6 }
 
-   OriginBoundCertificate ::= IA5String
+ OriginBoundCertificate ::= 
+         IA5String
 	    </artwork>
 	  </figure>
 	</section>
