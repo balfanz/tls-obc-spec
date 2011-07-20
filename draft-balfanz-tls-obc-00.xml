@@ -207,7 +207,7 @@
 	length <spanx style="verb">extension_data</spanx>. For
 	testing, we will use the extension type value of 0xff0f. For
 	this type value, the entire encoding of the extension will be
-	ff 0f 00 00 00.
+	ff 0f 00 00.
        </t>
       </section>
 
