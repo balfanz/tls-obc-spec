@@ -17,7 +17,7 @@
 <?rfc comments="no"?>
 <?rfc inline="no"?>
 <!-- end of list of popular I-D processing instructions -->
-<rfc ipr="trust200902" docName="draft-balfanz-tls-obc-00">
+<rfc ipr="trust200902" docName="draft-balfanz-tls-obc-01">
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="TLS OBC">TLS Origin-Bound Certificates</title>
@@ -144,7 +144,7 @@
 	
 	  <t>Origin-bound certificates MUST be X.509 v3 certificates,
 	  and MUST include the origin-bound certificate extension (OID
-	  1.3.6.1.4.111129.2.1.6), shown below.  This extension MUST
+	  1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST
 	  be marked critical.</t>
 
 	  <t>The data of the extension will be the <xref
