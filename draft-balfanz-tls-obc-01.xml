@@ -17,7 +17,7 @@
 <?rfc comments="no"?>
 <?rfc inline="no"?>
 <!-- end of list of popular I-D processing instructions -->
-<rfc ipr="trust200902" docName="draft-balfanz-tls-obc-00">
+<rfc ipr="trust200902" docName="draft-balfanz-tls-obc-01">
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="TLS OBC">TLS Origin-Bound Certificates</title>
