@@ -144,7 +144,7 @@
 	
 	  <t>Origin-bound certificates MUST be X.509 v3 certificates,
 	  and MUST include the origin-bound certificate extension (OID
-	  1.3.6.1.4.111129.2.1.6), shown below.  This extension MUST
+	  1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST
 	  be marked critical.</t>
 
 	  <t>The data of the extension will be the <xref
