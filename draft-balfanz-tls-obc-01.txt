@@ -251,9 +251,9 @@ Internet-Draft                   TLS OBC                       July 2011
 3.1.  Extension Definition
 
    This document defines a new TLS extension, "ob_cert" (with tentative
-   extension type 0xff0f), which indicates that client and server agree
-   to allow the client to use an origin-bound certificate to
-   authenticate itself to the server.
+   extension type 13175, or 0x3377), which indicates that client and
+   server agree to allow the client to use an origin-bound certificate
+   to authenticate itself to the server.
 
    To indicate support for origin-bound certificates, the client
    includes an extension of type "ob_cert" in the Extended Client Hello
@@ -264,8 +264,8 @@ Internet-Draft                   TLS OBC                       July 2011
    The "ob_cert" TLS extension will be assigned a value from the TLS
    ExtensionType registry, and will contain zero length
    "extension_data".  For testing, we will use the extension type value
-   of 0xff0f.  For this type value, the entire encoding of the extension
-   will be ff 0f 00 00.
+   of 0x3377.  For this type value, the entire encoding of the extension
+   will be 33 77 00 00.
 
 3.2.  Client Hello
 
