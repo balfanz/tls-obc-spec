@@ -190,7 +190,7 @@
       <section title="Extension Definition">
 	<t>This document defines a new TLS extension, <spanx
 	style="verb">ob_cert</spanx> (with tentative extension type
-	0xff0f), which indicates that client and server agree to allow
+	13175, or 0x3377), which indicates that client and server agree to allow
 	the client to use an origin-bound certificate to authenticate
 	itself to the server.</t> 
 
@@ -205,9 +205,9 @@
 	be assigned a value from the TLS ExtensionType registry, and
 	will contain zero
 	length <spanx style="verb">extension_data</spanx>. For
-	testing, we will use the extension type value of 0xff0f. For
+	testing, we will use the extension type value of 0x3377. For
 	this type value, the entire encoding of the extension will be
-	ff 0f 00 00.
+	33 77 00 00.
        </t>
       </section>
 
