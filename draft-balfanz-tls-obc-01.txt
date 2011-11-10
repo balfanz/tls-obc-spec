@@ -3,10 +3,10 @@
 
 Internet Engineering Task Force                          D. Balfanz, Ed.
 Internet-Draft                                               D. Smetters
-Expires: January 2, 2012                                     M. Upadhyay
+Expires: May 12, 2012                                        M. Upadhyay
                                                                 A. Barth
                                                              Google Inc.
-                                                               July 2011
+                                                        November 9, 2011
 
 
                      TLS Origin-Bound Certificates
@@ -40,7 +40,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on January 2, 2012.
+   This Internet-Draft will expire on May 12, 2012.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Balfanz, et al.          Expires January 2, 2012                [Page 1]
+Balfanz, et al.           Expires May 12, 2012                  [Page 1]
 
-Internet-Draft                   TLS OBC                       July 2011
+Internet-Draft                   TLS OBC                   November 2011
 
 
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -77,16 +77,17 @@ Table of Contents
      2.2.  Certificate and Key Rotation  . . . . . . . . . . . . . . . 5
    3.  Changes to The Handshake Message Contents . . . . . . . . . . . 5
      3.1.  Extension Definition  . . . . . . . . . . . . . . . . . . . 5
-     3.2.  Client Hello  . . . . . . . . . . . . . . . . . . . . . . . 5
+     3.2.  Client Hello  . . . . . . . . . . . . . . . . . . . . . . . 6
      3.3.  Server Hello  . . . . . . . . . . . . . . . . . . . . . . . 6
      3.4.  Certificate Request . . . . . . . . . . . . . . . . . . . . 6
      3.5.  Client Certificate  . . . . . . . . . . . . . . . . . . . . 6
    4.  Security Considerations . . . . . . . . . . . . . . . . . . . . 7
      4.1.  Third-Party Tracking  . . . . . . . . . . . . . . . . . . . 7
-     4.2.  Server Tracking . . . . . . . . . . . . . . . . . . . . . . 7
-     4.3.  Cookie Hardening  . . . . . . . . . . . . . . . . . . . . . 7
+     4.2.  Server Tracking . . . . . . . . . . . . . . . . . . . . . . 8
+     4.3.  Cookie Hardening  . . . . . . . . . . . . . . . . . . . . . 8
+     4.4.  Key Lengths . . . . . . . . . . . . . . . . . . . . . . . . 8
    5.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 9
 
 
 
@@ -107,10 +108,9 @@ Table of Contents
 
 
 
-
-Balfanz, et al.          Expires January 2, 2012                [Page 2]
+Balfanz, et al.           Expires May 12, 2012                  [Page 2]
 
-Internet-Draft                   TLS OBC                       July 2011
+Internet-Draft                   TLS OBC                   November 2011
 
 
 1.  Introduction
@@ -135,8 +135,8 @@ Internet-Draft                   TLS OBC                       July 2011
    client authentication without having to obtain user consent before
    using certificates.  A client creates at most one (self-signed)
    certificate of any given type per web origin [WebOrigin], and does
-   not include user-identifying information into such _origin-bound
-   certificates_, thus making user consent and user-assisted certificate
+   not include user-identifying information into such origin-bound
+   certificates, thus making user consent and user-assisted certificate
    selection unnecessary.
 
 1.1.  Requirements Language
@@ -148,8 +148,8 @@ Internet-Draft                   TLS OBC                       July 2011
 1.2.  Extension Dependencies
 
    The client SHOULD use TLS-OBC during a TLS session only if it also
-   uses the TLS-MessageReordering [CertMessageReordering] extension
-   during that TLS session.
+   uses the TLS Encrypted Client Certificates [EncryptedClientCerts]
+   extension during that TLS session.
 
 
 2.  Origin-Bound Certificates
@@ -164,9 +164,9 @@ Internet-Draft                   TLS OBC                       July 2011
 
 
 
-Balfanz, et al.          Expires January 2, 2012                [Page 3]
+Balfanz, et al.           Expires May 12, 2012                  [Page 3]
 
-Internet-Draft                   TLS OBC                       July 2011
+Internet-Draft                   TLS OBC                   November 2011
 
 
    than one web origin.
@@ -202,8 +202,9 @@ Internet-Draft                   TLS OBC                       July 2011
    1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST be marked
    critical.
 
-   The data of the extension will be the ASCII Serialization [WebOrigin]
-   of the certificate's web origin [WebOrigin] as an IA5String.
+   The data of the extension, "OriginBoundCertificate", will be the
+   ASCII Serialization of the certificate's web origin [WebOrigin] as an
+   IA5String.
 
     id-ce-originBoundCertificate OBJECT IDENTIFIER ::=
             { enterprises Google 2 1 6 }
@@ -213,17 +214,23 @@ Internet-Draft                   TLS OBC                       July 2011
 
                                  Figure 1
 
+   The server MAY reject the origin-bound certificate if it determines
+   that the web origin included in the "OriginBoundCertificate"
+   extension does not match the server's origin (for example, if it
 
 
 
-
-
-
-
-Balfanz, et al.          Expires January 2, 2012                [Page 4]
+Balfanz, et al.           Expires May 12, 2012                  [Page 4]
 
-Internet-Draft                   TLS OBC                       July 2011
+Internet-Draft                   TLS OBC                   November 2011
 
+
+   doesn't match the host name specified in the Server Name Indication
+   TLS extension).  It is, however, RECOMMENDED that the server merely
+   report the value of the web origin to the upper layers in the
+   protocol stack, and leave it up to those layers to make use of the
+   web origin value (e.g., to assist developers in debugging the
+   feature).
 
 2.2.  Certificate and Key Rotation
 
@@ -245,6 +252,15 @@ Internet-Draft                   TLS OBC                       July 2011
    The client SHOULD use a new key pair when it generates a new origin-
    bound certificate.
 
+   If the client receives a CERTIFICATE_REVOKED message from the server,
+   it SHOULD discard the origin-bound certificate for the origin of that
+   server, and restart the handshake with a Client Hello message.  This
+   will cause the client to generate a new origin-bound certificate for
+   this server during the TLS handshake.
+
+   The server SHOULD send a CERTIFICATE_REVOKED message to the client if
+   it has evidence that the client's private key has been compromised.
+
 
 3.  Changes to The Handshake Message Contents
 
@@ -257,9 +273,17 @@ Internet-Draft                   TLS OBC                       July 2011
 
    To indicate support for origin-bound certificates, the client
    includes an extension of type "ob_cert" in the Extended Client Hello
-   message.  To request client authentication with an origin-bound
-   certificate, the server includes the same extension in Extended
-   Server Hello message.
+
+
+
+Balfanz, et al.           Expires May 12, 2012                  [Page 5]
+
+Internet-Draft                   TLS OBC                   November 2011
+
+
+   message.  To confirm support for origin-bound certificates, the
+   server includes the same extension in its Extended Server Hello
+   message.
 
    The "ob_cert" TLS extension will be assigned a value from the TLS
    ExtensionType registry, and will contain zero length
@@ -273,14 +297,6 @@ Internet-Draft                   TLS OBC                       July 2011
    certificates MUST include the "ob_cert" in the extended Client Hello
    message to a server from a particular web origin.
 
-
-
-
-Balfanz, et al.          Expires January 2, 2012                [Page 5]
-
-Internet-Draft                   TLS OBC                       July 2011
-
-
 3.3.  Server Hello
 
    A server that receives a Client Hello message containing the
@@ -293,7 +309,7 @@ Internet-Draft                   TLS OBC                       July 2011
 
    A server MAY choose to send a Certificate Request message to the
    client.  If the session uses origin-bound client certificates, the
-   server MAY use an empty "certificate_authorities" list.
+   server SHOULD use an empty "certificate_authorities" list.
 
    A client that receives a Certificate Request during a session for
    which origin-bound client certificates were negotiated MUST ignore
@@ -305,18 +321,21 @@ Internet-Draft                   TLS OBC                       July 2011
    Request message must send a Client Certificate message in response
    (which may or may not include client certificates).  If client and
    server negotiated origin-bound client certificates, then the client
-   SHOULD include a certificate in the Client Certificate message.  If
-   the "certificate_authorities" list in the Certificate Request is
-   empty, that certificate SHOULD be an origin-bound certificate, and it
-   should be selected by the client without any assistance or approval
-   by the end-user.  If the "certificate_authorities" list in the
-   Certificate Request is not empty, the client MAY select a regular
-   certificate for inclusion in the Client Certificate message, and MAY
-   involve the end-user in the certificate selection process.
+   SHOULD include an origin-bound certificate in the Client Certificate
+   message.
 
    If a client includes an origin-bound certificate in the Client
    Certificate message during a session for which origin-bound client
    certificates were negotiated, the included certificate MUST
+
+
+
+
+
+Balfanz, et al.           Expires May 12, 2012                  [Page 6]
+
+Internet-Draft                   TLS OBC                   November 2011
+
 
    o  be an origin-bound certificate for the web origin of the server,
       and
@@ -329,14 +348,6 @@ Internet-Draft                   TLS OBC                       July 2011
    by the server in the Certificate Request message and include the
    newly-generated certificate in the Client Certificate message.  Only
    if the client is not capable of providing a certificate of the
-
-
-
-Balfanz, et al.          Expires January 2, 2012                [Page 6]
-
-Internet-Draft                   TLS OBC                       July 2011
-
-
    requested type SHOULD it include an empty "certificate_list" in the
    Client Certificate message.
 
@@ -366,11 +377,21 @@ Internet-Draft                   TLS OBC                       July 2011
    A third party might be able to track a client across multiple
    sessions by observing the use of the same origin-bound certificate.
    To alleviate this concern, clients SHOULD also implement the
-   CertificateMessage Reordering Extension [CertMessageReordering], and
-   use it concurrently with TLS-OBC.  The CertificateMessage Reordering
-   Extension [CertMessageReordering]ensures that the origin-bound
+   Encrypted Client Certificates Extension [EncryptedClientCerts], and
+   use it concurrently with TLS-OBC.  The Encrypted Client Certificates
+   Extension [EncryptedClientCerts]ensures that the origin-bound
    certificate is sent after TLS established secrecy on the channel
    between client and server.
+
+
+
+
+
+
+Balfanz, et al.           Expires May 12, 2012                  [Page 7]
+
+Internet-Draft                   TLS OBC                   November 2011
+
 
 4.2.  Server Tracking
 
@@ -384,30 +405,31 @@ Internet-Draft                   TLS OBC                       July 2011
    is by "binding" cookies to an origin-bound certificate.  The server,
    when issuing a cookie for an HTTP session, would associate the
    client's origin-bound certificate with the session (either by
-   encoding information about the certificate unforgeably in the
+   encoding information about the certificate unforgeably in the cookie,
+   or by associating the certificate with the cookie's session through
+   some other means).  That way, if and when a cookie gets stolen from a
+   client, it cannot be used over a TLS connection initiated by a
+   different client - the cookie thief would also have to steal the
+   private key associated with the client's origin-bound certificate, a
+   task considerably harder especially when we assume the existence of a
+   Trusted Platform Module or other Secure Element that can store the
+   origin-bound-certificate's private key.
 
+4.4.  Key Lengths
 
+   If the client uses RSA key pairs, the key length should be at least
+   1024 bits.  For longer-lived origin-bound certificates, the key
+   length should be 2048 bits.
 
-Balfanz, et al.          Expires January 2, 2012                [Page 7]
-
-Internet-Draft                   TLS OBC                       July 2011
-
-
-   cookie), or by associating the certificate with the cookie's session
-   through some other means.  That way, if and when a cookie gets stolen
-   from a client, it cannot be used over a different TLS connection -
-   the cookie thief would also have to steal the private key associated
-   with the client's origin-bound certificate, a task considerably
-   harder especially when we assume the existence of a Trusted Platform
-   Module or other Secure Element that can store the origin-bound-
-   certificate's private key.
+   If the client uses ECDSA key pairs, the key length should be at least
+   160 bits.
 
 
 5.  References
 
-   [CertMessageReordering]
-              "TODO: Reference for ClientCertificate message
-              reordering", <http://example.com>.
+   [EncryptedClientCerts]
+              Langley, A., "TLS Encrypted Client Certificates", <http://
+              tools.ietf.org/html/draft-agl-tls-encryptedclientcerts>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -419,6 +441,14 @@ Internet-Draft                   TLS OBC                       July 2011
               Extension Definitions", RFC 6066, January 2011.
 
    [WebOrigin]
+
+
+
+Balfanz, et al.           Expires May 12, 2012                  [Page 8]
+
+Internet-Draft                   TLS OBC                   November 2011
+
+
               Barth, A., "The Web Origin Concept",
               <http://tools.ietf.org/html/draft-abarth-origin-09>.
 
@@ -437,16 +467,6 @@ Authors' Addresses
 
    D K Smetters
    Google Inc.
-
-
-
-
-
-
-
-Balfanz, et al.          Expires January 2, 2012                [Page 8]
-
-Internet-Draft                   TLS OBC                       July 2011
 
 
    Mayank Upadhyay
@@ -480,25 +500,5 @@ Internet-Draft                   TLS OBC                       July 2011
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Balfanz, et al.          Expires January 2, 2012                [Page 9]
+Balfanz, et al.           Expires May 12, 2012                  [Page 9]
 

@@ -144,10 +144,10 @@
 <table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
 <tr><td class="header">Internet Engineering Task Force</td><td class="header">D. Balfanz, Ed.</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">D. Smetters</td></tr>
-<tr><td class="header">Expires: January 2, 2012</td><td class="header">M. Upadhyay</td></tr>
+<tr><td class="header">Expires: May 12, 2012</td><td class="header">M. Upadhyay</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">A. Barth</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google Inc.</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">July 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 9, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />TLS Origin-Bound Certificates<br />draft-balfanz-tls-obc-01</h1>
 
@@ -179,7 +179,7 @@ The list of current Internet-Drafts can be accessed at
 The list of Internet-Draft Shadow Directories can be accessed at
 <a href='http://www.ietf.org/shadow.html'>http://www.ietf.org/shadow.html</a>.</p>
 <p>
-This Internet-Draft will expire on January 2, 2012.</p>
+This Internet-Draft will expire on May 12, 2012.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -228,6 +228,8 @@ Third-Party Tracking<br />
 Server Tracking<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">4.3.</a>&nbsp;
 Cookie Hardening<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor17">4.4.</a>&nbsp;
+Key Lengths<br />
 <a href="#rfc.references1">5.</a>&nbsp;
 References<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
@@ -263,8 +265,8 @@ Introduction</h3>
       obtain user consent before using certificates. A client creates
       at most one (self-signed) certificate of any given type per
       <a class='info' href='#WebOrigin'>web origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin], and does not include
-      user-identifying information into such <em>origin-bound
-      certificates</em>, thus making user consent and user-assisted
+      user-identifying information into such origin-bound
+      certificates, thus making user consent and user-assisted
       certificate selection unnecessary.
 </p>
 <a name="anchor2"></a><br /><hr />
@@ -283,8 +285,9 @@ Requirements Language</h3>
 Extension Dependencies</h3>
 
 <p>The client SHOULD use TLS-OBC during a TLS session only if
-	it also uses the <a class='info' href='#CertMessageReordering'>TLS-MessageReordering<span> (</span><span class='info'>, &ldquo;TODO: Reference for ClientCertificate message 	  reordering,&rdquo; .</span><span>)</span></a> [CertMessageReordering] extension
-	during that TLS session.
+	it also uses the <a class='info' href='#EncryptedClientCerts'>TLS
+	Encrypted Client Certificates<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts] extension during that TLS
+	session.
 </p>
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -339,9 +342,8 @@ Origin-Bound Certificate Extension</h3>
 	  1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST
 	  be marked critical.
 </p>
-<p>The data of the extension will be the <a class='info' href='#WebOrigin'>ASCII Serialization<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin] of the
-          certificate's <a class='info' href='#WebOrigin'>web origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin] as
-          an IA5String.
+<p>The data of the extension, <tt>OriginBoundCertificate</tt>, will be the
+          ASCII Serialization of the certificate's <a class='info' href='#WebOrigin'>web origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin] as an IA5String.
 </p><br /><hr class="insert" />
 <a name="figure_extension"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -352,6 +354,16 @@ Origin-Bound Certificate Extension</h3>
          IA5String
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
+<p>The server MAY reject the origin-bound certificate if it
+	  determines that the web origin included in the <tt>OriginBoundCertificate</tt> extension does
+	  not match the server's origin (for example, if it doesn't
+	  match the host name specified in the Server Name Indication
+	  TLS extension). It is, however, RECOMMENDED that the server
+	  merely report the value of the web origin to the upper
+	  layers in the protocol stack, and leave it up to those
+	  layers to make use of the web origin value (e.g., to assist
+	  developers in debugging the feature).
+</p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2.2"></a><h3>2.2.&nbsp;
@@ -374,7 +386,18 @@ Certificate and Key Rotation</h3>
 	generated the next time a user visits that origin.
 </p>
 <p>The client SHOULD use a new key pair when it generates a new
-	  origin-bound certificate.
+	origin-bound certificate.
+</p>
+<p>If the client receives a CERTIFICATE_REVOKED message from
+	the server, it SHOULD discard the origin-bound certificate for
+	the origin of that server, and restart the handshake with a
+	Client Hello message. This will cause the client to generate a
+	new origin-bound certificate for this server during the TLS
+	handshake.
+</p>
+<p>The server SHOULD send a CERTIFICATE_REVOKED message to the
+        client if it has evidence that the client's private key has
+        been compromised.
 </p>
 <a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -393,8 +416,8 @@ Extension Definition</h3>
 </p>
 <p>To indicate support for origin-bound certificates, the
 	client includes an extension of type <tt>ob_cert</tt> in the Extended Client Hello
-	message. To request client authentication with an origin-bound
-	certificate, the server includes the same extension in
+	message. To confirm support for origin-bound certificates,
+	the server includes the same extension in its
 	Extended Server Hello message.
 </p>
 <p>The <tt>ob_cert</tt> TLS extension will
@@ -435,7 +458,7 @@ Certificate Request</h3>
 
 <p>A server MAY choose to send a Certificate Request message
 	to the client. If the session uses origin-bound client
-	certificates, the server MAY use an empty <tt>certificate_authorities</tt> list.
+	certificates, the server SHOULD use an empty <tt>certificate_authorities</tt> list.
 </p>
 <p>A client that receives a Certificate Request during a
 	session for which origin-bound client certificates were
@@ -451,16 +474,8 @@ Client Certificate</h3>
 	Certificate message in response (which may or may not include
 	client certificates). If client and server negotiated
 	origin-bound client certificates, then the client SHOULD
-	include a certificate in the Client Certificate message. If
-	the <tt>certificate_authorities</tt> list
-	in the Certificate Request is empty, that certificate SHOULD
-	be an origin-bound certificate, and it should be selected by
-	the client without any assistance or approval by the
-	end-user. If the <tt>certificate_authorities</tt> list in the
-	Certificate Request is not empty, the client MAY select a
-	regular certificate for inclusion in the Client Certificate
-	message, and MAY involve the end-user in the certificate
-	selection process.
+	include an origin-bound certificate in the Client Certificate
+	message.
 </p>
 <p>If a client includes an origin-bound certificate in the
 	Client Certificate message during a session for which
@@ -518,10 +533,10 @@ Third-Party Tracking</h3>
 <p>A third party might be able to track a client across
 	multiple sessions by observing the use of the same
 	origin-bound certificate. To alleviate this concern, clients
-	SHOULD also implement the <a class='info' href='#CertMessageReordering'>CertificateMessage Reordering
-	Extension<span> (</span><span class='info'>, &ldquo;TODO: Reference for ClientCertificate message 	  reordering,&rdquo; .</span><span>)</span></a> [CertMessageReordering], and use it concurrently with TLS-OBC. The
-	<a class='info' href='#CertMessageReordering'>CertificateMessage
-	Reordering Extension<span> (</span><span class='info'>, &ldquo;TODO: Reference for ClientCertificate message 	  reordering,&rdquo; .</span><span>)</span></a> [CertMessageReordering]ensures that the origin-bound
+	SHOULD also implement the <a class='info' href='#EncryptedClientCerts'>Encrypted Client Certificates
+	Extension<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts], and use it concurrently with TLS-OBC. The
+	<a class='info' href='#EncryptedClientCerts'>Encrypted Client
+	Certificates Extension<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts]ensures that the origin-bound
 	certificate is sent after TLS established secrecy on the
 	channel between client and server.
 </p>
@@ -545,23 +560,35 @@ Cookie Hardening</h3>
 	certificate. The server, when issuing a cookie for an HTTP
 	session, would associate the client's origin-bound certificate
 	with the session (either by encoding information about the
-	certificate unforgeably in the cookie), or by associating the
+	certificate unforgeably in the cookie, or by associating the
 	certificate with the cookie's session through some other
-	means. That way, if and when a cookie gets stolen from a
-	client, it cannot be used over a different TLS connection -
-	the cookie thief would also have to steal the private key
-	associated with the client's origin-bound certificate, a task
-	considerably harder especially when we assume the existence of
-	a Trusted Platform Module or other Secure Element that can
-	store the origin-bound-certificate's private key.
+	means). That way, if and when a cookie gets stolen from a
+	client, it cannot be used over a TLS connection initiated by a
+	different client - the cookie thief would also have to steal
+	the private key associated with the client's origin-bound
+	certificate, a task considerably harder especially when we
+	assume the existence of a Trusted Platform Module or other
+	Secure Element that can store the origin-bound-certificate's
+	private key.
+</p>
+<a name="anchor17"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
+Key Lengths</h3>
+
+<p>If the client uses RSA key pairs, the key length should be
+	at least 1024 bits. For longer-lived origin-bound
+	certificates, the key length should be 2048 bits.
+</p>
+<p>If the client uses ECDSA key pairs, the key length should
+	be at least 160 bits.
 </p>
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <h3>5.&nbsp;References</h3>
 <table width="99%" border="0">
-<tr><td class="author-text" valign="top"><a name="CertMessageReordering">[CertMessageReordering]</a></td>
-<td class="author-text">&ldquo;<a href="http://example.com">TODO: Reference for ClientCertificate message
-	  reordering</a>.&rdquo;</td></tr>
+<tr><td class="author-text" valign="top"><a name="EncryptedClientCerts">[EncryptedClientCerts]</a></td>
+<td class="author-text">Langley, A., &ldquo;<a href="http://tools.ietf.org/html/draft-agl-tls-encryptedclientcerts">TLS Encrypted Client Certificates</a>.&rdquo;</td></tr>
 <tr><td class="author-text" valign="top"><a name="RFC2119">[RFC2119]</a></td>
 <td class="author-text"><a href="mailto:sob@harvard.edu">Bradner, S.</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>,&rdquo; BCP&nbsp;14, RFC&nbsp;2119, March&nbsp;1997 (<a href="http://www.rfc-editor.org/rfc/rfc2119.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc2119.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc2119.xml">XML</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="RFC5246">[RFC5246]</a></td>
