@@ -193,17 +193,6 @@
 
 	<t>The client SHOULD use a new key pair when it generates a new
 	origin-bound certificate.</t>
-
-	<t>If the client receives a CERTIFICATE_REVOKED message from
-	the server, it SHOULD discard the origin-bound certificate for
-	the origin of that server, and restart the handshake with a
-	Client Hello message. This will cause the client to generate a
-	new origin-bound certificate for this server during the TLS
-	handshake.</t>
-
-        <t>The server SHOULD send a CERTIFICATE_REVOKED message to the
-        client if it has evidence that the client's private key has
-        been compromised.</t>
       </section>
     </section>
     
