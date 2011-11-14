@@ -3,10 +3,10 @@
 
 Internet Engineering Task Force                          D. Balfanz, Ed.
 Internet-Draft                                               D. Smetters
-Expires: May 13, 2012                                        M. Upadhyay
+Expires: May 16, 2012                                        M. Upadhyay
                                                                 A. Barth
                                                              Google Inc.
-                                                       November 10, 2011
+                                                       November 13, 2011
 
 
                      TLS Origin-Bound Certificates
@@ -40,7 +40,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on May 13, 2012.
+   This Internet-Draft will expire on May 16, 2012.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 1]
+Balfanz, et al.           Expires May 16, 2012                  [Page 1]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -108,7 +108,7 @@ Table of Contents
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 2]
+Balfanz, et al.           Expires May 16, 2012                  [Page 2]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -134,10 +134,10 @@ Internet-Draft                   TLS OBC                   November 2011
    extension [RFC6066] that allows clients to use certificate-based
    client authentication without having to obtain user consent before
    using certificates.  A client creates at most one (self-signed)
-   certificate of any given type per web origin [WebOrigin], and does
-   not include user-identifying information into such origin-bound
-   certificates, thus making user consent and user-assisted certificate
-   selection unnecessary.
+   certificate of any given type (e.g., rsa_sign or ecdsa_sign) per web
+   origin [WebOrigin], and does not include user-identifying information
+   into such origin-bound certificates, thus making user consent and
+   user-assisted certificate selection unnecessary.
 
 1.1.  Requirements Language
 
@@ -164,7 +164,7 @@ Internet-Draft                   TLS OBC                   November 2011
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 3]
+Balfanz, et al.           Expires May 16, 2012                  [Page 3]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -199,7 +199,7 @@ Internet-Draft                   TLS OBC                   November 2011
 
    Origin-bound certificates MUST be X.509 v3 certificates, and MUST
    include the origin-bound certificate extension (OID
-   1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST be marked
+   1.3.6.1.4.1.11129.2.1.6), shown below.  This extension MUST be marked
    critical.
 
    The data of the extension, "OriginBoundCertificate", will be the
@@ -220,7 +220,7 @@ Internet-Draft                   TLS OBC                   November 2011
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 4]
+Balfanz, et al.           Expires May 16, 2012                  [Page 4]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -264,9 +264,9 @@ Internet-Draft                   TLS OBC                   November 2011
 
    To indicate support for origin-bound certificates, the client
    includes an extension of type "ob_cert" in the Extended Client Hello
-   message.  To confirm support for origin-bound certificates, the
-   server includes the same extension in its Extended Server Hello
-   message.
+   message.  To indicate that a subsequent CertificateRequest message
+   requests an origin-bound certificate, the server includes the same
+   extension in its Extended Server Hello message.
 
    The "ob_cert" TLS extension will be assigned a value from the TLS
    ExtensionType registry, and will contain zero length
@@ -276,7 +276,7 @@ Internet-Draft                   TLS OBC                   November 2011
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 5]
+Balfanz, et al.           Expires May 16, 2012                  [Page 5]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -332,7 +332,7 @@ Internet-Draft                   TLS OBC                   November 2011
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 6]
+Balfanz, et al.           Expires May 16, 2012                  [Page 6]
 
 Internet-Draft                   TLS OBC                   November 2011
 
@@ -350,13 +350,8 @@ Internet-Draft                   TLS OBC                   November 2011
    notAfter fields in the certificate.
 
    Finally, the server MUST verify that the certificate contains the
-   origin-bound extension, and SHOULD verify that the origin identified
-   in that certificate matches the server.  In particular, the scheme
-   MUST be https.  The port MUST be the server port to which the client
-   connected for the TLS connection, and the host name MUST be a valid
-   host name for the server.  If the client uses SNI, then the hostname
-   in the origin-bound certificate must match the hostname specified in
-   the SNI extension.
+   origin-bound extension, and MAY verify that the origin identified in
+   that certificate matches the server (see Section 2.1.1).
 
 
 4.  Security Considerations
@@ -368,7 +363,7 @@ Internet-Draft                   TLS OBC                   November 2011
    To alleviate this concern, clients SHOULD also implement the
    Encrypted Client Certificates Extension [EncryptedClientCerts], and
    use it concurrently with TLS-OBC.  The Encrypted Client Certificates
-   Extension [EncryptedClientCerts]ensures that the origin-bound
+   Extension [EncryptedClientCerts] ensures that the origin-bound
    certificate is sent after TLS established secrecy on the channel
    between client and server.
 
@@ -385,19 +380,19 @@ Internet-Draft                   TLS OBC                   November 2011
    when issuing a cookie for an HTTP session, would associate the
    client's origin-bound certificate with the session (either by
    encoding information about the certificate unforgeably in the cookie,
-
-
-
-Balfanz, et al.           Expires May 13, 2012                  [Page 7]
-
-Internet-Draft                   TLS OBC                   November 2011
-
-
    or by associating the certificate with the cookie's session through
    some other means).  That way, if and when a cookie gets stolen from a
    client, it cannot be used over a TLS connection initiated by a
    different client - the cookie thief would also have to steal the
    private key associated with the client's origin-bound certificate, a
+
+
+
+Balfanz, et al.           Expires May 16, 2012                  [Page 7]
+
+Internet-Draft                   TLS OBC                   November 2011
+
+
    task considerably harder especially when we assume the existence of a
    Trusted Platform Module or other Secure Element that can store the
    origin-bound-certificate's private key.
@@ -432,23 +427,6 @@ Internet-Draft                   TLS OBC                   November 2011
               <http://tools.ietf.org/html/draft-abarth-origin-09>.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Balfanz, et al.           Expires May 13, 2012                  [Page 8]
-
-Internet-Draft                   TLS OBC                   November 2011
-
-
 Authors' Addresses
 
    Dirk Balfanz (editor)
@@ -459,6 +437,16 @@ Authors' Addresses
 
    Phone:
    Email: balfanz@google.com
+
+
+
+
+
+
+
+Balfanz, et al.           Expires May 16, 2012                  [Page 8]
+
+Internet-Draft                   TLS OBC                   November 2011
 
 
    D K Smetters
@@ -500,5 +488,17 @@ Authors' Addresses
 
 
 
-Balfanz, et al.           Expires May 13, 2012                  [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+Balfanz, et al.           Expires May 16, 2012                  [Page 9]
 
