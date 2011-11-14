@@ -83,11 +83,11 @@
       <xref target="RFC6066">TLS extension</xref> that allows clients
       to use certificate-based client authentication without having to
       obtain user consent before using certificates. A client creates
-      at most one (self-signed) certificate of any given type per
-      <xref target="WebOrigin">web origin</xref>, and does not include
-      user-identifying information into such origin-bound
-      certificates, thus making user consent and user-assisted
-      certificate selection unnecessary.</t>
+      at most one (self-signed) certificate of any given type (e.g.,
+      rsa_sign or ecdsa_sign) per <xref target="WebOrigin">web
+      origin</xref>, and does not include user-identifying information
+      into such origin-bound certificates, thus making user consent
+      and user-assisted certificate selection unnecessary.</t>
 
       <section title="Requirements Language">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
@@ -140,11 +140,11 @@
 	notBefore and notAfter fields in the new certificate to
 	record the lifetime of the new certificate.</t>
 
-	<section title="Origin-Bound Certificate Extension">
+	<section title="Origin-Bound Certificate Extension" anchor="x509extension">
 	
 	  <t>Origin-bound certificates MUST be X.509 v3 certificates,
 	  and MUST include the origin-bound certificate extension (OID
-	  1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST
+	  1.3.6.1.4.1.11129.2.1.6), shown below.  This extension MUST
 	  be marked critical.</t>
 
 	  <t>The data of the extension, <spanx
@@ -207,9 +207,10 @@
 	<t>To indicate support for origin-bound certificates, the
 	client includes an extension of type <spanx
 	style="verb">ob_cert</spanx> in the Extended Client Hello
-	message. To confirm support for origin-bound certificates,
-	the server includes the same extension in its
-	Extended Server Hello message.</t>
+	message. To indicate that a subsequent CertificateRequest
+	message requests an origin-bound certificate, the server
+	includes the same extension in its Extended Server Hello
+	message.</t>
 
 	<t>The <spanx style="verb">ob_cert</spanx> TLS extension will
 	be assigned a value from the TLS ExtensionType registry, and
@@ -290,15 +291,10 @@
 	  certificate. The server MUST ignore the notBefore and
 	  notAfter fields in the certificate.</t>
 
-        <t>Finally, the server MUST verify that the certificate contains
-	  the origin-bound extension, and SHOULD verify that the origin
-	  identified in that certificate matches the server. In
-	  particular, the scheme MUST be https. The port MUST be the
-	  server port to which the client connected for the TLS
-	  connection, and the host name MUST be a valid host name for
-	  the server. If the client uses SNI, then the hostname in the
-	  origin-bound certificate must match the hostname specified
-	  in the SNI extension.</t>
+        <t>Finally, the server MUST verify that the certificate
+	  contains the origin-bound extension, and MAY verify that the
+	  origin identified in that certificate matches the server
+	  (see <xref target="x509extension"/>).</t>
       </section>
     </section>
 
@@ -311,7 +307,7 @@
 	target="EncryptedClientCerts">Encrypted Client Certificates
 	Extension</xref>, and use it concurrently with TLS-OBC. The
 	<xref target="EncryptedClientCerts">Encrypted Client
-	Certificates Extension</xref>ensures that the origin-bound
+	Certificates Extension</xref> ensures that the origin-bound
 	certificate is sent after TLS established secrecy on the
 	channel between client and server.</t>
       </section>

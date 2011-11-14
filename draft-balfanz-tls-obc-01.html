@@ -144,10 +144,10 @@
 <table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
 <tr><td class="header">Internet Engineering Task Force</td><td class="header">D. Balfanz, Ed.</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">D. Smetters</td></tr>
-<tr><td class="header">Expires: May 13, 2012</td><td class="header">M. Upadhyay</td></tr>
+<tr><td class="header">Expires: May 16, 2012</td><td class="header">M. Upadhyay</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">A. Barth</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Google Inc.</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 10, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 13, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />TLS Origin-Bound Certificates<br />draft-balfanz-tls-obc-01</h1>
 
@@ -179,7 +179,7 @@ The list of current Internet-Drafts can be accessed at
 The list of Internet-Draft Shadow Directories can be accessed at
 <a href='http://www.ietf.org/shadow.html'>http://www.ietf.org/shadow.html</a>.</p>
 <p>
-This Internet-Draft will expire on May 13, 2012.</p>
+This Internet-Draft will expire on May 16, 2012.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -204,31 +204,31 @@ Extension Dependencies<br />
 Origin-Bound Certificates<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">2.1.</a>&nbsp;
 Certificate Creation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">2.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#x509extension">2.1.1.</a>&nbsp;
 Origin-Bound Certificate Extension<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">2.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">2.2.</a>&nbsp;
 Certificate and Key Rotation<br />
-<a href="#anchor8">3.</a>&nbsp;
+<a href="#anchor7">3.</a>&nbsp;
 Changes to The Handshake Message Contents<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">3.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">3.1.</a>&nbsp;
 Extension Definition<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">3.2.</a>&nbsp;
 Client Hello<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">3.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.3.</a>&nbsp;
 Server Hello<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor12">3.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">3.4.</a>&nbsp;
 Certificate Request<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#ClientCertificateMessage">3.5.</a>&nbsp;
 Client Certificate<br />
-<a href="#anchor13">4.</a>&nbsp;
+<a href="#anchor12">4.</a>&nbsp;
 Security Considerations<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">4.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">4.1.</a>&nbsp;
 Third-Party Tracking<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">4.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">4.2.</a>&nbsp;
 Server Tracking<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">4.3.</a>&nbsp;
 Cookie Hardening<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor17">4.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">4.4.</a>&nbsp;
 Key Lengths<br />
 <a href="#rfc.references1">5.</a>&nbsp;
 References<br />
@@ -263,11 +263,11 @@ Introduction</h3>
       <a class='info' href='#RFC6066'>TLS extension<span> (</span><span class='info'>Eastlake, D., &ldquo;Transport Layer Security (TLS) Extensions: Extension Definitions,&rdquo; January&nbsp;2011.</span><span>)</span></a> [RFC6066] that allows clients
       to use certificate-based client authentication without having to
       obtain user consent before using certificates. A client creates
-      at most one (self-signed) certificate of any given type per
-      <a class='info' href='#WebOrigin'>web origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin], and does not include
-      user-identifying information into such origin-bound
-      certificates, thus making user consent and user-assisted
-      certificate selection unnecessary.
+      at most one (self-signed) certificate of any given type (e.g.,
+      rsa_sign or ecdsa_sign) per <a class='info' href='#WebOrigin'>web
+      origin<span> (</span><span class='info'>Barth, A., &ldquo;The Web Origin Concept,&rdquo; .</span><span>)</span></a> [WebOrigin], and does not include user-identifying information
+      into such origin-bound certificates, thus making user consent
+      and user-assisted certificate selection unnecessary.
 </p>
 <a name="anchor2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -332,14 +332,14 @@ Certificate Creation</h3>
 	notBefore and notAfter fields in the new certificate to
 	record the lifetime of the new certificate.
 </p>
-<a name="anchor6"></a><br /><hr />
+<a name="x509extension"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2.1.1"></a><h3>2.1.1.&nbsp;
 Origin-Bound Certificate Extension</h3>
 
 <p>Origin-bound certificates MUST be X.509 v3 certificates,
 	  and MUST include the origin-bound certificate extension (OID
-	  1.3.6.1.4.11129.2.1.6), shown below.  This extension MUST
+	  1.3.6.1.4.1.11129.2.1.6), shown below.  This extension MUST
 	  be marked critical.
 </p>
 <p>The data of the extension, <tt>OriginBoundCertificate</tt>, will be the
@@ -364,7 +364,7 @@ Origin-Bound Certificate Extension</h3>
 	  layers to make use of the web origin value (e.g., to assist
 	  developers in debugging the feature).
 </p>
-<a name="anchor7"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2.2"></a><h3>2.2.&nbsp;
 Certificate and Key Rotation</h3>
@@ -388,12 +388,12 @@ Certificate and Key Rotation</h3>
 <p>The client SHOULD use a new key pair when it generates a new
 	origin-bound certificate.
 </p>
-<a name="anchor8"></a><br /><hr />
+<a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3"></a><h3>3.&nbsp;
 Changes to The Handshake Message Contents</h3>
 
-<a name="anchor9"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
 Extension Definition</h3>
@@ -405,9 +405,10 @@ Extension Definition</h3>
 </p>
 <p>To indicate support for origin-bound certificates, the
 	client includes an extension of type <tt>ob_cert</tt> in the Extended Client Hello
-	message. To confirm support for origin-bound certificates,
-	the server includes the same extension in its
-	Extended Server Hello message.
+	message. To indicate that a subsequent CertificateRequest
+	message requests an origin-bound certificate, the server
+	includes the same extension in its Extended Server Hello
+	message.
 </p>
 <p>The <tt>ob_cert</tt> TLS extension will
 	be assigned a value from the TLS ExtensionType registry, and
@@ -418,7 +419,7 @@ Extension Definition</h3>
 	33 77 00 00.
        
 </p>
-<a name="anchor10"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
 Client Hello</h3>
@@ -428,7 +429,7 @@ Client Hello</h3>
         message to a server from a particular web origin.
 	
 </p>
-<a name="anchor11"></a><br /><hr />
+<a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
 Server Hello</h3>
@@ -440,7 +441,7 @@ Server Hello</h3>
 	have negotiated origin-bound client certificates for the
 	session.
 </p>
-<a name="anchor12"></a><br /><hr />
+<a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.4"></a><h3>3.4.&nbsp;
 Certificate Request</h3>
@@ -499,22 +500,17 @@ Client Certificate</h3>
 	  certificate. The server MUST ignore the notBefore and
 	  notAfter fields in the certificate.
 </p>
-<p>Finally, the server MUST verify that the certificate contains
-	  the origin-bound extension, and SHOULD verify that the origin
-	  identified in that certificate matches the server. In
-	  particular, the scheme MUST be https. The port MUST be the
-	  server port to which the client connected for the TLS
-	  connection, and the host name MUST be a valid host name for
-	  the server. If the client uses SNI, then the hostname in the
-	  origin-bound certificate must match the hostname specified
-	  in the SNI extension.
+<p>Finally, the server MUST verify that the certificate
+	  contains the origin-bound extension, and MAY verify that the
+	  origin identified in that certificate matches the server
+	  (see <a class='info' href='#x509extension'>Section&nbsp;2.1.1<span> (</span><span class='info'>Origin-Bound Certificate Extension</span><span>)</span></a>).
 </p>
-<a name="anchor13"></a><br /><hr />
+<a name="anchor12"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4"></a><h3>4.&nbsp;
 Security Considerations</h3>
 
-<a name="anchor14"></a><br /><hr />
+<a name="anchor13"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
 Third-Party Tracking</h3>
@@ -525,11 +521,11 @@ Third-Party Tracking</h3>
 	SHOULD also implement the <a class='info' href='#EncryptedClientCerts'>Encrypted Client Certificates
 	Extension<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts], and use it concurrently with TLS-OBC. The
 	<a class='info' href='#EncryptedClientCerts'>Encrypted Client
-	Certificates Extension<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts]ensures that the origin-bound
+	Certificates Extension<span> (</span><span class='info'>Langley, A., &ldquo;TLS Encrypted Client Certificates,&rdquo; .</span><span>)</span></a> [EncryptedClientCerts] ensures that the origin-bound
 	certificate is sent after TLS established secrecy on the
 	channel between client and server.
 </p>
-<a name="anchor15"></a><br /><hr />
+<a name="anchor14"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2"></a><h3>4.2.&nbsp;
 Server Tracking</h3>
@@ -539,7 +535,7 @@ Server Tracking</h3>
 	could happen, for example, when the user elects to remove all
 	cookies for that origin.
 </p>
-<a name="anchor16"></a><br /><hr />
+<a name="anchor15"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
 Cookie Hardening</h3>
@@ -560,7 +556,7 @@ Cookie Hardening</h3>
 	Secure Element that can store the origin-bound-certificate's
 	private key.
 </p>
-<a name="anchor17"></a><br /><hr />
+<a name="anchor16"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
 Key Lengths</h3>
