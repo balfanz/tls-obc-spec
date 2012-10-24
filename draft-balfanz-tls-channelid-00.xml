@@ -10,13 +10,7 @@
 
 <rfc ipr="trust200902" docName="draft-balfanz-tls-channelid-00">
   <front>
-    <title abbrev="TLS Next Protocol Negotiation">Transport Layer Security (TLS) Channel IDs</title>
-    <author initials="A." surname="Langley" fullname="Adam Langley">
-      <organization>Google Inc</organization>
-      <address>
-        <email>agl@google.com</email>
-      </address>
-    </author>
+    <title abbrev="TLS Channel ID">Transport Layer Security (TLS) Channel IDs</title>
     <author initials="D." surname="Balfanz" fullname="Dirk Balfanz">
       <organization>Google Inc</organization>
       <address>
@@ -216,7 +210,7 @@ struct {
 
     <section title="Privacy Considerations">
       <t>
-        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier and that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies.
+        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
       </t>
 
       <t>
@@ -252,5 +246,14 @@ struct {
     <references title="Informative References">
       &RFC5077;
     </references>
+
+    <section title="Acknowledgements" anchor="acks">
+      <t>
+        The following individuals contributed to this specification:
+      </t>
+      <t>
+        Dirk Balfanz, Wan-Teh Chang, Ryan Hamilton, Adam Langley, and Mayank Upadhyay.
+      </t>
+    </section>
   </back>
 </rfc>
