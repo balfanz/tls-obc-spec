@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en"><head><title>Transport Layer Security (TLS) Channel IDs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="Transport Layer Security (TLS) Channel IDs">
+<meta name="generator" content="xml2rfc v1.34 (http://xml.resource.org/)">
+<style type='text/css'><!--
+        body {
+                font-family: verdana, charcoal, helvetica, arial, sans-serif;
+                font-size: small; color: #000; background-color: #FFF;
+                margin: 2em;
+        }
+        h1, h2, h3, h4, h5, h6 {
+                font-family: helvetica, monaco, "MS Sans Serif", arial, sans-serif;
+                font-weight: bold; font-style: normal;
+        }
+        h1 { color: #900; background-color: transparent; text-align: right; }
+        h3 { color: #333; background-color: transparent; }
+
+        td.RFCbug {
+                font-size: x-small; text-decoration: none;
+                width: 30px; height: 30px; padding-top: 2px;
+                text-align: justify; vertical-align: middle;
+                background-color: #000;
+        }
+        td.RFCbug span.RFC {
+                font-family: monaco, charcoal, geneva, "MS Sans Serif", helvetica, verdana, sans-serif;
+                font-weight: bold; color: #666;
+        }
+        td.RFCbug span.hotText {
+                font-family: charcoal, monaco, geneva, "MS Sans Serif", helvetica, verdana, sans-serif;
+                font-weight: normal; text-align: center; color: #FFF;
+        }
+
+        table.TOCbug { width: 30px; height: 15px; }
+        td.TOCbug {
+                text-align: center; width: 30px; height: 15px;
+                color: #FFF; background-color: #900;
+        }
+        td.TOCbug a {
+                font-family: monaco, charcoal, geneva, "MS Sans Serif", helvetica, sans-serif;
+                font-weight: bold; font-size: x-small; text-decoration: none;
+                color: #FFF; background-color: transparent;
+        }
+
+        td.header {
+                font-family: arial, helvetica, sans-serif; font-size: x-small;
+                vertical-align: top; width: 33%;
+                color: #FFF; background-color: #666;
+        }
+        td.author { font-weight: bold; font-size: x-small; margin-left: 4em; }
+        td.author-text { font-size: x-small; }
+
+        /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+        a.info {
+                /* This is the key. */
+                position: relative;
+                z-index: 24;
+                text-decoration: none;
+        }
+        a.info:hover {
+                z-index: 25;
+                color: #FFF; background-color: #900;
+        }
+        a.info span { display: none; }
+        a.info:hover span.info {
+                /* The span will display just on :hover state. */
+                display: block;
+                position: absolute;
+                font-size: smaller;
+                top: 2em; left: -5em; width: 15em;
+                padding: 2px; border: 1px solid #333;
+                color: #900; background-color: #EEE;
+                text-align: left;
+        }
+
+        a { font-weight: bold; }
+        a:link    { color: #900; background-color: transparent; }
+        a:visited { color: #633; background-color: transparent; }
+        a:active  { color: #633; background-color: transparent; }
+
+        p { margin-left: 2em; margin-right: 2em; }
+        p.copyright { font-size: x-small; }
+        p.toc { font-size: small; font-weight: bold; margin-left: 3em; }
+        table.toc { margin: 0 0 0 3em; padding: 0; border: 0; vertical-align: text-top; }
+        td.toc { font-size: small; font-weight: bold; vertical-align: text-top; }
+
+        ol.text { margin-left: 2em; margin-right: 2em; }
+        ul.text { margin-left: 2em; margin-right: 2em; }
+        li      { margin-left: 3em; }
+
+        /* RFC-2629 <spanx>s and <artwork>s. */
+        em     { font-style: italic; }
+        strong { font-weight: bold; }
+        dfn    { font-weight: bold; font-style: normal; }
+        cite   { font-weight: normal; font-style: normal; }
+        tt     { color: #036; }
+        tt, pre, pre dfn, pre em, pre cite, pre span {
+                font-family: "Courier New", Courier, monospace; font-size: small;
+        }
+        pre {
+                text-align: left; padding: 4px;
+                color: #000; background-color: #CCC;
+        }
+        pre dfn  { color: #900; }
+        pre em   { color: #66F; background-color: #FFC; font-weight: normal; }
+        pre .key { color: #33C; font-weight: bold; }
+        pre .id  { color: #900; }
+        pre .str { color: #000; background-color: #CFF; }
+        pre .val { color: #066; }
+        pre .rep { color: #909; }
+        pre .oth { color: #000; background-color: #FCF; }
+        pre .err { background-color: #FCC; }
+
+        /* RFC-2629 <texttable>s. */
+        table.all, table.full, table.headers, table.none {
+                font-size: small; text-align: center; border-width: 2px;
+                vertical-align: top; border-collapse: collapse;
+        }
+        table.all, table.full { border-style: solid; border-color: black; }
+        table.headers, table.none { border-style: none; }
+        th {
+                font-weight: bold; border-color: black;
+                border-width: 2px 2px 3px 2px;
+        }
+        table.all th, table.full th { border-style: solid; }
+        table.headers th { border-style: none none solid none; }
+        table.none th { border-style: none; }
+        table.all td {
+                border-style: solid; border-color: #333;
+                border-width: 1px 2px;
+        }
+        table.full td, table.headers td, table.none td { border-style: none; }
+
+        hr { height: 1px; }
+        hr.insert {
+                width: 80%; border-style: none; border-width: 0;
+                color: #CCC; background-color: #CCC;
+        }
+--></style>
+</head>
+<body>
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
+<tr><td class="header">Network Working Group</td><td class="header">D. Balfanz</td></tr>
+<tr><td class="header">Internet-Draft</td><td class="header">R. Hamilton</td></tr>
+<tr><td class="header">Expires: April 26, 2013</td><td class="header">Google Inc</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 23, 2012</td></tr>
+</table></td></tr></table>
+<h1><br />Transport Layer Security (TLS) Channel IDs<br />draft-balfanz-tls-channelid-00</h1>
+
+<h3>Abstract</h3>
+
+<p>
+        This document describes a Transport Layer Security (TLS) extension for identifying client machines at the TLS layer without using bearer tokens.
+      
+</p>
+<h3>Status of this Memo</h3>
+<p>
+This Internet-Draft is submitted to IETF in full
+conformance with the provisions of BCP&nbsp;78 and BCP&nbsp;79.</p>
+<p>
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.
+Note that other groups may also distribute working documents as
+Internet-Drafts.</p>
+<p>
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any time.
+It is inappropriate to use Internet-Drafts as reference material or to cite
+them other than as &ldquo;work in progress.&rdquo;</p>
+<p>
+The list of current Internet-Drafts can be accessed at
+<a href='http://www.ietf.org/ietf/1id-abstracts.txt'>http://www.ietf.org/ietf/1id-abstracts.txt</a>.</p>
+<p>
+The list of Internet-Draft Shadow Directories can be accessed at
+<a href='http://www.ietf.org/shadow.html'>http://www.ietf.org/shadow.html</a>.</p>
+<p>
+This Internet-Draft will expire on April 26, 2013.</p>
+
+<h3>Copyright Notice</h3>
+<p>
+Copyright (c) 2012 IETF Trust and the persons identified as the
+document authors.  All rights reserved.</p>
+<p>
+This document is subject to BCP 78 and the IETF Trust's Legal
+Provisions Relating to IETF Documents in effect on the date of
+publication of this document (http://trustee.ietf.org/license-info).
+Please review these documents carefully, as they describe your
+rights and restrictions with respect to this document.</p>
+<a name="toc"></a><br /><hr />
+<h3>Table of Contents</h3>
+<p class="toc">
+<a href="#intro">1.</a>&nbsp;
+Introduction<br />
+<a href="#anchor1">2.</a>&nbsp;
+Why not client certificates<br />
+<a href="#anchor2">3.</a>&nbsp;
+Requirements Notation<br />
+<a href="#anchor3">4.</a>&nbsp;
+Channel ID Extension<br />
+<a href="#anchor4">5.</a>&nbsp;
+Security Considerations<br />
+<a href="#anchor5">6.</a>&nbsp;
+Privacy Considerations<br />
+<a href="#anchor6">7.</a>&nbsp;
+IANA Considerations<br />
+<a href="#rfc.references1">8.</a>&nbsp;
+References<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">8.1.</a>&nbsp;
+Normative References<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">8.2.</a>&nbsp;
+Informative References<br />
+<a href="#acks">Appendix&nbsp;A.</a>&nbsp;
+Acknowledgements<br />
+<a href="#rfc.authors">&#167;</a>&nbsp;
+Authors' Addresses<br />
+</p>
+<br clear="all" />
+
+<a name="intro"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.1"></a><h3>1.&nbsp;
+Introduction</h3>
+
+<p>
+        Many applications on the Internet use <em>bearer tokens</em> to authenticate clients to servers. The most prominent example is the HTTP-based World Wide Web, which overwhelmingly uses HTTP cookies to authenticate client requests. Other examples include OpenID or SAML assertions, and OAuth tokens. All these have in common that the <em>bearer</em> of the HTTP cookie or authentication token is granted access to a protected resource, regardless of the channel over which the token is presented, or who presented it.     
+      
+</p>
+<p>
+        As a result, an adversary that manages to steal a bearer token from a client can impersonate that client to services that require the token.
+      
+</p>
+<p>
+        This document describes a light-weight mechanism for establishing a <em>cryptographic channel</em> between client and server. A server can choose to bind authentication tokens to this channel, thus rendering the theft of authentication tokens fruitless - tokens must be sent over the channel to which they are bound (i.e., by the client to which they were issued) or else they will be ignored.
+      
+</p>
+<p>
+        This document does not prescribe <em>how</em> authentication tokens are bound to the underlying channel. Rather, it prescribes how a client can establish a long-lived channel with a server. Such a channel persists across HTTP requests, TLS connections, and even multiple TLS sessions, as long as the same client communicates with the same server. 
+      
+</p>
+<p>
+        The basic idea is that the client proves, during the TLS handshake, possession of a private key. The corresponding public key becomes the "Channel ID" that identifies this TLS connection. Clients should re-use the same private/public key pair across subsequent TLS connections to the same server, thus creating TLS connections that share the same Channel ID. 
+      
+</p>
+<p>
+        Using private/public key pairs to define a channel (as opposed to, say, an HTTP session cookie) has several advantages: One, the credential establishing the channel (the private key) is never sent from client to server, thus removing it from the reach of eavesdroppers in the network. Two, clients can choose to implement cryptographic operations in a secure hardware module, which further removes the private key from the reach of eavesdroppers residing on the client itself.
+      
+</p>
+<a name="anchor1"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.2"></a><h3>2.&nbsp;
+Why not client certificates</h3>
+
+<p>
+        TLS already supports a means of identifying clients without using bearer tokens: client certificates. However, a number of problems with using client certificates motivated the development of an alternative.
+      
+</p>
+<p>
+        Most importantly, it's not acceptable for a client identifier to be transmitted in the clear and client certificates in TLS are sent unencrypted. Although we could also define a change to the TLS state machine to move the client certificates under encryption, such changes eliminate most of the benefits of reusing something that's already defined.
+      
+</p>
+<p>
+        TLS client certificates are also defined to be part of the session state. This turns session resumption secrets into equivalent barer tokens; completely defeating our objectives.
+      
+</p>
+<p>
+        Client-certificates typically identify a user, while we seek to identify machines. Since they are not, conceptually, mutually exclusive and as only a single client certificate can be provided in TLS, we don't want to consume that single slot and eliminate the possibility of also using existing client certificates.
+      
+</p>
+<p>
+        Client certificates are implemented in TLS as X.509 certificates and we don't wish to require servers to parse arbitrary ASN.1. ASN.1 is a complex encoding that has been the source of several security vulnerabilities in the past and typical TLS servers can currently avoid doing ASN.1 parsing.
+      
+</p>
+<p>
+        X.509 certificates always include a signature, which would be a self-signature in this case. Calculating and transmitting the self-signature is a waste of computation and network traffic in our use. Although we could define a null signature algorithm with an empty signature, such deviations from X.509 eliminate many of the benefits of reusing something that is already implemented.
+      
+</p>
+<p>
+        Finally, client certificates trigger significant server-side processing by default and often need to be stored in their entirety for the duration of the connection. Since this design is intended to be widely used, it allows servers to retain only a cryptographic hash of the client's public key after the handshake completes.
+      
+</p>
+<a name="anchor2"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3"></a><h3>3.&nbsp;
+Requirements Notation</h3>
+
+<p>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <a class='info' href='#RFC2119'>RFC 2119<span> (</span><span class='info'>Bradner, S., &ldquo;Key words for use in RFCs to Indicate Requirement Levels,&rdquo; March&nbsp;1997.</span><span>)</span></a> [RFC2119].
+      
+</p>
+<a name="anchor3"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4"></a><h3>4.&nbsp;
+Channel ID Extension</h3>
+
+<p>
+        A new extension type (<tt>channel_id(TBD)</tt>) is defined and MAY be included by the client in its <tt>ClientHello</tt> message. If, and only if, the server sees this extension in the <tt>ClientHello</tt>, it MAY choose to echo the extension in its <tt>ServerHello</tt>. In both cases, the <tt>extension_data</tt> field MUST be empty.
+      
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+enum {
+  channel_id(TBD), (65535)
+} ExtensionType;
+</pre></div>
+<p>
+        A new handshake message type (<tt>encrypted_extensions(TBD)</tt>) is defined. If the server included a <tt>channel_id</tt> extension in its <tt>ServerHello</tt> message, the client MUST verify that the selected cipher suite is sufficiently strong. If the cipher suite provides &lt; 80-bits of security, the client MUST abort the handshake with a fatal <tt>illegal_parameter</tt> alert. Otherwise, the client MUST send an <tt>EncryptedExtensions</tt> message after its <tt>ChangeCipherSpec</tt> and before its <tt>Finished</tt> message.
+      
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+enum {
+  encrypted_extensions(TBD), (65535)
+} HandshakeType;
+</pre></div>
+<p>Therefore a full handshake with <tt>EncryptedExtensions</tt> has the following flow (contrast with section 7.3 of <a class='info' href='#RFC5246'>RFC 5246<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a> [RFC5246]):
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+Client                                               Server
+
+ClientHello (ChannelID extension)   --------&gt;
+                                                ServerHello
+                                      (ChannelID extension)
+                                               Certificate*
+                                         ServerKeyExchange*
+                                        CertificateRequest*
+                             &lt;--------      ServerHelloDone
+Certificate*
+ClientKeyExchange
+CertificateVerify*
+[ChangeCipherSpec]
+EncryptedExtensions
+Finished                     --------&gt;
+                                         [ChangeCipherSpec]
+                             &lt;--------             Finished
+Application Data             &lt;-------&gt;     Application Data
+</pre></div>
+<p>An abbreviated handshake with <tt>EncryptedExtensions</tt> has the following flow:
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+Client                                                Server
+
+ClientHello (ChannelID extension)    --------&gt;
+                                                ServerHello
+                                      (ChannelID extension)
+                                         [ChangeCipherSpec]
+                              &lt;--------            Finished
+[ChangeCipherSpec]
+EncryptedExtensions
+Finished                      --------&gt;
+Application Data              &lt;-------&gt;    Application Data
+</pre></div>
+<p>The <tt>EncryptedExtensions</tt> message contains a series of <tt>Extension</tt> structures (see section 7.4.1.4 of <a class='info' href='#RFC5246'>RFC 5246<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a> [RFC5246]
+</p>
+<p>If the server included a <tt>channel_id</tt> extension in its <tt>ServerHello</tt> message, the client MUST include an <tt>Extension</tt> with <tt>extension_type</tt> equal to <tt>channel_id(TBD)</tt>. The <tt>extension_data</tt> of which has the following format:
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+struct {
+  opaque x[32];
+  opaque y[32];
+  opaque r[32];
+  opaque s[32];
+} ChannelIDExtension;
+</pre></div>
+<p>
+        The contents of each of <tt>x</tt>, <tt>y</tt>, <tt>r</tt> and <tt>s</tt> is a 32-byte, big-endian number. The <tt>x</tt> and <tt>y</tt> fields contain the affine coordinates of a <a class='info' href='#DSS'>P-256<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] curve point. The  <tt>r</tt> and <tt>s</tt> fields contain an <a class='info' href='#DSS'>ECDSA<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] signature by the corresponding private key of "TLS Channel ID signature\x00" followed by the handshake hash(es) prior to the <tt>EncryptedExtensions</tt> message.
+      
+</p>
+<p>
+        Unlike many other TLS extensions, this extension does not establish properties of the session, only of the connection. When session resumption or <a class='info' href='#RFC5077'>session tickets<span> (</span><span class='info'>Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig, &ldquo;Transport Layer Security (TLS) Session Resumption without Server-Side State,&rdquo; January&nbsp;2008.</span><span>)</span></a> [RFC5077] are used, the previous contents of this extension are irrelevant and only the values in the new handshake messages are considered.
+      
+</p>
+<a name="anchor4"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5"></a><h3>5.&nbsp;
+Security Considerations</h3>
+
+<p>
+        There are four classes of attackers against which we consider our security guarantees: passive network attackers, active network attackers, active network attackers with misissued certificates and attackers in possession of the legitimate server's private key.
+      
+</p>
+<p>
+        First, we wish to guarantee that we don't disclose the Channel ID to passive or active network attackers. We do this by sending a constant-length Channel ID under encryption. However, since the Channel ID may be transmitted before the server's Finished message is received, it's possible that the server isn't in possession of the certificate that it presented. In this situation, an active attacker could cause a Channel ID to be transmitted under a random key in a cipher suite of their choosing. Therefore we limit the permissible cipher suites to those where decrypting the message is infeasible.
+      
+</p>
+<p>
+        Even with this limit, an active attacker can cause the Channel ID to be transmitted in a non-forward-secure manner. Subsequent disclosure of the server's private key would allow previously recorded Channel IDs to be decrypted.
+      
+</p>
+<p>
+        Second, we wish to guarantee that none of the first three attackers can terminate/hijack a TLS connection and impersonate a Channel ID from that connection when connecting to the legitimate server. We assume that TLS provides sufficient security to prevent a connection from being hijacked once established by these attackers. An active attacker with a misissued certificate can successfully terminate the TLS connection and decrypt the Channel ID. However, as the signature covers the handshake hashes, and therefore the server's certificate, it wouldn't be accepted by the true server.
+      
+</p>
+<p>
+        Against an attacker with the legitimate server's private key we can provide the second guarantee only if the legitimate server uses a forward-secret cipher suite, otherwise the attacker can hijack the connection.
+      
+</p>
+<a name="anchor5"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.6"></a><h3>6.&nbsp;
+Privacy Considerations</h3>
+
+<p>
+        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
+      
+</p>
+<p>
+        However, there are some security concerns that could result in the disclosure of a client's Channel ID to a network attacker. This is covered in the Security Considerations section.
+      
+</p>
+<a name="anchor6"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.7"></a><h3>7.&nbsp;
+IANA Considerations</h3>
+
+<p>
+        This document requires IANA to update its registry of TLS extensions to assign an entry referred to here as <tt>channel_id</tt>.
+      
+</p>
+<p>
+        This document also requires IANA to update its registry of TLS handshake types to assign an entry referred to here as <tt>encrypted_extensions</tt>.
+      
+</p>
+<a name="rfc.references"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8"></a><h3>8.&nbsp;
+References</h3>
+
+<a name="rfc.references1"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<h3>8.1.&nbsp;Normative References</h3>
+<table width="99%" border="0">
+<tr><td class="author-text" valign="top"><a name="RFC2119">[RFC2119]</a></td>
+<td class="author-text"><a href="mailto:sob@harvard.edu">Bradner, S.</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>,&rdquo; BCP&nbsp;14, RFC&nbsp;2119, March&nbsp;1997 (<a href="http://www.rfc-editor.org/rfc/rfc2119.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc2119.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc2119.xml">XML</a>).</td></tr>
+<tr><td class="author-text" valign="top"><a name="RFC5246">[RFC5246]</a></td>
+<td class="author-text">Dierks, T. and E. Rescorla, &ldquo;<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>,&rdquo; RFC&nbsp;5246, August&nbsp;2008 (<a href="http://www.rfc-editor.org/rfc/rfc5246.txt">TXT</a>).</td></tr>
+<tr><td class="author-text" valign="top"><a name="DSS">[DSS]</a></td>
+<td class="author-text">National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard.&rdquo;</td></tr>
+</table>
+
+<a name="rfc.references2"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<h3>8.2.&nbsp;Informative References</h3>
+<table width="99%" border="0">
+<tr><td class="author-text" valign="top"><a name="RFC5077">[RFC5077]</a></td>
+<td class="author-text">Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig, &ldquo;<a href="http://tools.ietf.org/html/rfc5077">Transport Layer Security (TLS) Session Resumption without Server-Side State</a>,&rdquo; RFC&nbsp;5077, January&nbsp;2008 (<a href="http://www.rfc-editor.org/rfc/rfc5077.txt">TXT</a>).</td></tr>
+</table>
+
+<a name="acks"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
+Acknowledgements</h3>
+
+<p>
+        The following individuals contributed to this specification:
+      
+</p>
+<p>
+        Dirk Balfanz, Wan-Teh Chang, Ryan Hamilton, Adam Langley, and Mayank Upadhyay.
+      
+</p>
+<a name="rfc.authors"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<h3>Authors' Addresses</h3>
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Dirk Balfanz</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Google Inc</td></tr>
+<tr><td class="author" align="right">Email:&nbsp;</td>
+<td class="author-text"><a href="mailto:balfanz@google.com">balfanz@google.com</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Ryan Hamilton</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Google Inc</td></tr>
+<tr><td class="author" align="right">Email:&nbsp;</td>
+<td class="author-text"><a href="mailto:rch@google.com">rch@google.com</a></td></tr>
+</table>
+</body></html>
