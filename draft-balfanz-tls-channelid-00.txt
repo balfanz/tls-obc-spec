@@ -3,8 +3,8 @@
 
 Network Working Group                                         D. Balfanz
 Internet-Draft                                               R. Hamilton
-Expires: April 26, 2013                                       Google Inc
-                                                        October 23, 2012
+Expires: May 11, 2013                                         Google Inc
+                                                        November 7, 2012
 
 
                Transport Layer Security (TLS) Channel IDs
@@ -37,7 +37,7 @@ Status of this Memo
    The list of Internet-Draft Shadow Directories can be accessed at
    http://www.ietf.org/shadow.html.
 
-   This Internet-Draft will expire on April 26, 2013.
+   This Internet-Draft will expire on May 11, 2013.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 1]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 1]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
    to this document.  Code Components extracted from this document must
@@ -108,9 +108,9 @@ Table of Contents
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 2]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 2]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 3]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 3]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 2.  Why not client certificates
@@ -220,9 +220,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 4]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 4]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 3.  Requirements Notation
@@ -276,9 +276,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 5]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 5]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 4.  Channel ID Extension
@@ -332,9 +332,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 6]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 6]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
    flow:
@@ -388,9 +388,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 7]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 7]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 5.  Security Considerations
@@ -444,9 +444,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 8]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 8]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 6.  Privacy Considerations
@@ -500,9 +500,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                 [Page 9]
+Balfanz & Hamilton        Expires May 11, 2013                  [Page 9]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 7.  IANA Considerations
@@ -556,9 +556,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                [Page 10]
+Balfanz & Hamilton        Expires May 11, 2013                 [Page 10]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 8.  References
@@ -612,9 +612,9 @@ Internet-Draft               TLS Channel ID                 October 2012
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                [Page 11]
+Balfanz & Hamilton        Expires May 11, 2013                 [Page 11]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 Appendix A.  Acknowledgements
@@ -668,9 +668,9 @@ Appendix A.  Acknowledgements
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                [Page 12]
+Balfanz & Hamilton        Expires May 11, 2013                 [Page 12]
 
-Internet-Draft               TLS Channel ID                 October 2012
+Internet-Draft               TLS Channel ID                November 2012
 
 
 Authors' Addresses
@@ -724,5 +724,5 @@ Authors' Addresses
 
 
 
-Balfanz & Hamilton       Expires April 26, 2013                [Page 13]
+Balfanz & Hamilton        Expires May 11, 2013                 [Page 13]
 
