@@ -8,7 +8,7 @@
 
 <?rfc toc="yes" symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-balfanz-tls-channelid-00">
+<rfc ipr="trust200902" docName="draft-balfanz-tls-channelid-01">
   <front>
     <title abbrev="TLS Channel ID">Transport Layer Security (TLS) Channel IDs</title>
     <author initials="D." surname="Balfanz" fullname="Dirk Balfanz">
@@ -24,7 +24,7 @@
       </address>
     </author>
 
-    <date month="November" year="2012" />
+    <date month="June" year="2013" />
     <area>Security</area>
     <abstract>
       <t>
@@ -61,11 +61,11 @@
       </t>
 
       <t>
-        Most importantly, it's not acceptable for a client identifier to be transmitted in the clear and client certificates in TLS are sent unencrypted. Although we could also define a change to the TLS state machine to move the client certificates under encryption, such changes eliminate most of the benefits of reusing something that's already defined.
+        Most importantly, it's not acceptable for a client identifier to be transmitted in the clear, because eavesdroppers in the network could use these identifiers to deanonymize TLS connections. Client certificates in TLS, however, are sent unencrypted. Although we could also define a change to the TLS state machine to move the client certificates under encryption, such changes eliminate most of the benefits of reusing something that's already defined.
       </t>
 
       <t>
-        TLS client certificates are also defined to be part of the session state. This turns session resumption secrets into equivalent barer tokens; completely defeating our objectives.
+        TLS client certificates are also defined to be part of the session state. Even though the key material used for TLS client authentication might be protected from theft from compromised clients (for example, by employing hardware secure elements on the client), TLS session resumption information rarely is. Because client certificates are part of the session state, stolen session resumption information gives the attacker something equivalent to a stolen client private key. Our objective, however, is that attackers should not be able to give the impression that they can wield a private key unless they are actually in control of that private key.
       </t>
 
       <t>
@@ -94,6 +94,14 @@
       </t>
     </section>
 
+    <section title="Channel ID Client Keys">
+      <t>
+	For the purpose of this specification, a public key is a point <spanx style="verb">Q = dG</spanx> on the <xref target="DSS">P-256 curve</xref> (where <spanx style="verb">d</spanx> is the ECC private key, and <spanx style="verb">G</spanx> is the curve base point). Clients SHOULD use a separate key pair <spanx style="verb">(d, Q)</spanx> for each server they connect to, and generate a new key pair if necessary according to appendix B.4 in <xref target="DSS">FIPS-186-3</xref>.
+      </t>
+      <t>
+	A public key <spanx style="verb">Q</spanx> has two affine coordinates <spanx style="verb">x, y</spanx>: <spanx style="verb">Q = (x,y)</spanx>. The public key <spanx style="verb">Q</spanx> - or, in other words, the pair <spanx style="verb">x, y</spanx> - that a client uses for a specific server is that client's Channel ID for that server.
+      </t>
+    </section>
     <section title="Channel ID Extension">
       <t>
         A new extension type (<spanx style="verb">channel_id(TBD)</spanx>) is defined and MAY be included by the client in its <spanx style="verb">ClientHello</spanx> message. If, and only if, the server sees this extension in the <spanx style="verb">ClientHello</spanx>, it MAY choose to echo the extension in its <spanx style="verb">ServerHello</spanx>. In both cases, the <spanx style="verb">extension_data</spanx> field MUST be empty.
@@ -164,7 +172,7 @@ Application Data              &lt;-------&gt;    Application Data
 
       <t>The <spanx style="verb">EncryptedExtensions</spanx> message contains a series of <spanx style="verb">Extension</spanx> structures (see section 7.4.1.4 of <xref target="RFC5246">RFC 5246</xref></t>
 
-      <t>If the server included a <spanx style="verb">channel_id</spanx> extension in its <spanx style="verb">ServerHello</spanx> message, the client MUST include an <spanx style="verb">Extension</spanx> with <spanx style="verb">extension_type</spanx> equal to <spanx style="verb">channel_id(TBD)</spanx>. The <spanx style="verb">extension_data</spanx> of which has the following format:</t>
+      <t>If the server included a <spanx style="verb">channel_id</spanx> extension in its <spanx style="verb">ServerHello</spanx> message, the client MUST include, within an EncryptedExtensions message, an <spanx style="verb">Extension</spanx> with <spanx style="verb">extension_type</spanx> equal to <spanx style="verb">channel_id(TBD)</spanx>. The <spanx style="verb">extension_data</spanx> of which has the following format:</t>
 
       <figure>
         <artwork>
@@ -178,7 +186,13 @@ struct {
       </figure>
 
       <t>
-        The contents of each of <spanx style="verb">x</spanx>, <spanx style="verb">y</spanx>, <spanx style="verb">r</spanx> and <spanx style="verb">s</spanx> is a 32-byte, big-endian number. The <spanx style="verb">x</spanx> and <spanx style="verb">y</spanx> fields contain the affine coordinates of a <xref target="DSS">P-256</xref> curve point. The  <spanx style="verb">r</spanx> and <spanx style="verb">s</spanx> fields contain an <xref target="DSS">ECDSA</xref> signature by the corresponding private key of "TLS Channel ID signature\x00" followed by the handshake hash(es) prior to the <spanx style="verb">EncryptedExtensions</spanx> message.
+        The contents of each of <spanx style="verb">x</spanx>, <spanx style="verb">y</spanx>, <spanx style="verb">r</spanx> and <spanx style="verb">s</spanx> is a 32-byte, big-endian number. The <spanx style="verb">x</spanx> and <spanx style="verb">y</spanx> fields contain the affine coordinates of the client's Channel ID Q (i.e., a  <xref target="DSS">P-256</xref> curve point). The  <spanx style="verb">r</spanx> and <spanx style="verb">s</spanx> fields contain an <xref target="DSS">ECDSA</xref> signature by the corresponding private key over this US-ASCII strong (not including quotes, and where "\x00" represents an octet containing all zero bits):
+      </t>
+      <figure><artwork>
+"TLS Channel ID signature\x00"
+      </artwork></figure>
+      <t>
+ followed by hashes of both the client-sent and server-sent handshake messages, as seen by the client, prior to the <spanx style="verb">EncryptedExtensions</spanx> message.
       </t>
 
       <t>
@@ -192,7 +206,7 @@ struct {
       </t>
 
       <t>
-        First, we wish to guarantee that we don't disclose the Channel ID to passive or active network attackers. We do this by sending a constant-length Channel ID under encryption. However, since the Channel ID may be transmitted before the server's Finished message is received, it's possible that the server isn't in possession of the certificate that it presented. In this situation, an active attacker could cause a Channel ID to be transmitted under a random key in a cipher suite of their choosing. Therefore we limit the permissible cipher suites to those where decrypting the message is infeasible.
+        First, we wish to guarantee that we don't disclose the Channel ID to passive or active network attackers. We do this by sending a constant-length Channel ID under encryption. However, since the Channel ID may be transmitted before the server's Finished message is received, it's possible that the server isn't in possession of the corresponding private key to the certificate that it presented. In this situation, an active attacker could cause a Channel ID to be transmitted under a random key in a cipher suite of their choosing. Therefore we limit the permissible cipher suites to those where decrypting the message is infeasible.
       </t>
 
       <t>
@@ -200,7 +214,7 @@ struct {
       </t>
 
       <t>
-        Second, we wish to guarantee that none of the first three attackers can terminate/hijack a TLS connection and impersonate a Channel ID from that connection when connecting to the legitimate server. We assume that TLS provides sufficient security to prevent a connection from being hijacked once established by these attackers. An active attacker with a misissued certificate can successfully terminate the TLS connection and decrypt the Channel ID. However, as the signature covers the handshake hashes, and therefore the server's certificate, it wouldn't be accepted by the true server.
+        Second, we wish to guarantee that none of the first three attackers can terminate/hijack a TLS connection and impersonate a Channel ID from that connection when connecting to the legitimate server. We assume that TLS provides sufficient security to prevent these attackers from being able to hijack the TLS connection. An active attacker illegitimately in possession of a certificate for a server can successfully terminate a TLS connection destined for that server and decrypt the Channel ID. However, as the signature covers the handshake hashes, and therefore the server's certificate, it wouldn't be accepted by the true server.
       </t>
 
       <t>
@@ -208,13 +222,38 @@ struct {
       </t>
     </section>
 
-    <section title="Privacy Considerations">
+    <section title="Use Cases">
+      <section title="Channel-Bound Cookies">
+	<t>
+	  An HTTP application on the server can <spanx style="emph">channel-bind</spanx> its cookies by associating them with the Channel ID of the user-agent that the cookies are being set on. The server MAY then choose to consider cookies sent from the user-agent invalid if the Channel ID associated with the cookie does not match the Channel ID used by the user-agent when it sends the cookie back to the server.
+	</t>
+	<t>
+	  Such a mismatch could occur when the cookie has been obtained from the legitimate user-agent and is now being sent by a client not in possession of the legitimate user-agent's Channel ID private key. The mismatch can also occur if the legitimate user-agent has changed the Channel ID it is using for the server, presumably due to the user requesting a Channel ID reset through the user-agent's user interface (see <xref target="privacy" />). Such a user intervention is analogous to the user's removal of cookies from the user-agent, but instead of removing cookies, the cookies are being rendered invalid (in the eyes of the server).
+	</t>
+      </section>
+
+      <section title="Channel-Bound OAuth Tokens">
+	<t>
+	  Similarly to cookies, a server may choose to channel-bind OAuth tokens (or any other kind of authorization tokens) to the clients to which they are issued. The mechanism on the server remains the same (it associates the OAuth token with the client's Channel ID either by storing this information in a database, or by suitably encoding the information in the OAuth token itself), but the application-level protocol may be different: In addition to HTTP, OAuth tokens are used in protocols such as IMAP and XMPP.
+	</t>
+      </section>
+    </section>
+
+    <section anchor="privacy" title="Privacy Considerations">
       <t>
-        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
+        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. Because channel-bound cookies are an important use case for TLS Channel ID, and cookies can be set on top-level domains, it is RECOMMENDED that user-agents use the same Channel ID for servers within the same top-level domain, and different Channel IDs for different top-level domains. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
       </t>
 
       <t>
         However, there are some security concerns that could result in the disclosure of a client's Channel ID to a network attacker. This is covered in the Security Considerations section.
+      </t>
+
+      <t>
+	Clients that share an IP address can be disambiguated through their Channel IDs. This is analogous to protocols that use cookies (e.g., HTTP), which also allow disambiguation of user-agents behind proxies.
+      </t>
+
+      <t>
+	Channel ID has been designed to provide privacy equivalent to that of cookies. User-agents SHOULD continue to meet this design goal at higher layers of the protocol stack. For example, if a user indicates that they would like to block third-party cookies (or if the user-agent has some sort of policy around when it blocks third-party cookies by default), then the user agent SHOULD NOT use Channel ID on third-party connections (or other connections through which the user-agent would refuse to send or accept cookies).
       </t>
     </section>
 
@@ -254,6 +293,26 @@ struct {
       <t>
         Dirk Balfanz, Wan-Teh Chang, Ryan Hamilton, Adam Langley, and Mayank Upadhyay.
       </t>
+    </section>
+    <section title="History of Changes">
+      <section title="Version 01">
+	<t>
+	  <list style="symbols">
+	    <t>
+	      Some clarifications, mostly around the Channel ID and session state.
+	    </t>
+	    <t>
+	      Added a section on Use Cases.
+	    </t>
+	    <t>
+	      Expanded the Privacy Considerations sections to include discussion of third-party connections in HTTP user-agents. 
+	    </t>
+	    <t>
+	      Fixed some typos.
+	    </t>
+	  </list>
+	</t>
+      </section>
     </section>
   </back>
 </rfc>

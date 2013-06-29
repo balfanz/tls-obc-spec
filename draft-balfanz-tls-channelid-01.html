@@ -2,7 +2,7 @@
 <html lang="en"><head><title>Transport Layer Security (TLS) Channel IDs</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="Transport Layer Security (TLS) Channel IDs">
-<meta name="generator" content="xml2rfc v1.34 (http://xml.resource.org/)">
+<meta name="generator" content="xml2rfc v1.36 (http://xml.resource.org/)">
 <style type='text/css'><!--
         body {
                 font-family: verdana, charcoal, helvetica, arial, sans-serif;
@@ -143,10 +143,10 @@
 <table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
 <tr><td class="header">Network Working Group</td><td class="header">D. Balfanz</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">R. Hamilton</td></tr>
-<tr><td class="header">Expires: May 11, 2013</td><td class="header">Google Inc</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 7, 2012</td></tr>
+<tr><td class="header">Expires: December 31, 2013</td><td class="header">Google Inc</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">June 29, 2013</td></tr>
 </table></td></tr></table>
-<h1><br />Transport Layer Security (TLS) Channel IDs<br />draft-balfanz-tls-channelid-00</h1>
+<h1><br />Transport Layer Security (TLS) Channel IDs<br />draft-balfanz-tls-channelid-01</h1>
 
 <h3>Abstract</h3>
 
@@ -156,37 +156,35 @@
 </p>
 <h3>Status of this Memo</h3>
 <p>
-This Internet-Draft is submitted to IETF in full
+This Internet-Draft is submitted  in full
 conformance with the provisions of BCP&nbsp;78 and BCP&nbsp;79.</p>
 <p>
 Internet-Drafts are working documents of the Internet Engineering
-Task Force (IETF), its areas, and its working groups.
-Note that other groups may also distribute working documents as
-Internet-Drafts.</p>
+Task Force (IETF).  Note that other groups may also distribute
+working documents as Internet-Drafts.  The list of current
+Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>
 Internet-Drafts are draft documents valid for a maximum of six months
 and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-The list of current Internet-Drafts can be accessed at
-<a href='http://www.ietf.org/ietf/1id-abstracts.txt'>http://www.ietf.org/ietf/1id-abstracts.txt</a>.</p>
-<p>
-The list of Internet-Draft Shadow Directories can be accessed at
-<a href='http://www.ietf.org/shadow.html'>http://www.ietf.org/shadow.html</a>.</p>
-<p>
-This Internet-Draft will expire on May 11, 2013.</p>
+This Internet-Draft will expire on December 31, 2013.</p>
 
 <h3>Copyright Notice</h3>
 <p>
-Copyright (c) 2012 IETF Trust and the persons identified as the
+Copyright (c) 2013 IETF Trust and the persons identified as the
 document authors.  All rights reserved.</p>
 <p>
 This document is subject to BCP 78 and the IETF Trust's Legal
-Provisions Relating to IETF Documents in effect on the date of
-publication of this document (http://trustee.ietf.org/license-info).
-Please review these documents carefully, as they describe your
-rights and restrictions with respect to this document.</p>
+Provisions Relating to IETF Documents
+(http://trustee.ietf.org/license-info) in effect on the date of
+publication of this document.  Please review these documents
+carefully, as they describe your rights and restrictions with respect
+to this document. Code Components extracted from this document must
+include Simplified BSD License text as described in Section 4.e of
+the Trust Legal Provisions and are provided without warranty as
+described in the Simplified BSD License.</p>
 <a name="toc"></a><br /><hr />
 <h3>Table of Contents</h3>
 <p class="toc">
@@ -197,21 +195,33 @@ Why not client certificates<br />
 <a href="#anchor2">3.</a>&nbsp;
 Requirements Notation<br />
 <a href="#anchor3">4.</a>&nbsp;
-Channel ID Extension<br />
+Channel ID Client Keys<br />
 <a href="#anchor4">5.</a>&nbsp;
-Security Considerations<br />
+Channel ID Extension<br />
 <a href="#anchor5">6.</a>&nbsp;
-Privacy Considerations<br />
+Security Considerations<br />
 <a href="#anchor6">7.</a>&nbsp;
+Use Cases<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">7.1.</a>&nbsp;
+Channel-Bound Cookies<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">7.2.</a>&nbsp;
+Channel-Bound OAuth Tokens<br />
+<a href="#privacy">8.</a>&nbsp;
+Privacy Considerations<br />
+<a href="#anchor9">9.</a>&nbsp;
 IANA Considerations<br />
-<a href="#rfc.references1">8.</a>&nbsp;
+<a href="#rfc.references1">10.</a>&nbsp;
 References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">8.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">10.1.</a>&nbsp;
 Normative References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">8.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">10.2.</a>&nbsp;
 Informative References<br />
 <a href="#acks">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements<br />
+<a href="#anchor12">Appendix&nbsp;B.</a>&nbsp;
+History of Changes<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">B.1.</a>&nbsp;
+Version 01<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
 </p>
@@ -256,11 +266,11 @@ Why not client certificates</h3>
       
 </p>
 <p>
-        Most importantly, it's not acceptable for a client identifier to be transmitted in the clear and client certificates in TLS are sent unencrypted. Although we could also define a change to the TLS state machine to move the client certificates under encryption, such changes eliminate most of the benefits of reusing something that's already defined.
+        Most importantly, it's not acceptable for a client identifier to be transmitted in the clear, because eavesdroppers in the network could use these identifiers to deanonymize TLS connections. Client certificates in TLS, however, are sent unencrypted. Although we could also define a change to the TLS state machine to move the client certificates under encryption, such changes eliminate most of the benefits of reusing something that's already defined.
       
 </p>
 <p>
-        TLS client certificates are also defined to be part of the session state. This turns session resumption secrets into equivalent barer tokens; completely defeating our objectives.
+        TLS client certificates are also defined to be part of the session state. Even though the key material used for TLS client authentication might be protected from theft from compromised clients (for example, by employing hardware secure elements on the client), TLS session resumption information rarely is. Because client certificates are part of the session state, stolen session resumption information gives the attacker something equivalent to a stolen client private key. Our objective, however, is that attackers should not be able to give the impression that they can wield a private key unless they are actually in control of that private key.
       
 </p>
 <p>
@@ -293,6 +303,19 @@ Requirements Notation</h3>
 <a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4"></a><h3>4.&nbsp;
+Channel ID Client Keys</h3>
+
+<p>
+	For the purpose of this specification, a public key is a point <tt>Q = dG</tt> on the <a class='info' href='#DSS'>P-256 curve<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] (where <tt>d</tt> is the ECC private key, and <tt>G</tt> is the curve base point). Clients SHOULD use a separate key pair <tt>(d, Q)</tt> for each server they connect to, and generate a new key pair if necessary according to appendix B.4 in <a class='info' href='#DSS'>FIPS-186-3<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS].
+      
+</p>
+<p>
+	A public key <tt>Q</tt> has two affine coordinates <tt>x, y</tt>: <tt>Q = (x,y)</tt>. The public key <tt>Q</tt> - or, in other words, the pair <tt>x, y</tt> - that a client uses for a specific server is that client's Channel ID for that server.
+      
+</p>
+<a name="anchor4"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5"></a><h3>5.&nbsp;
 Channel ID Extension</h3>
 
 <p>
@@ -348,7 +371,7 @@ Application Data              &lt;-------&gt;    Application Data
 </pre></div>
 <p>The <tt>EncryptedExtensions</tt> message contains a series of <tt>Extension</tt> structures (see section 7.4.1.4 of <a class='info' href='#RFC5246'>RFC 5246<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a> [RFC5246]
 </p>
-<p>If the server included a <tt>channel_id</tt> extension in its <tt>ServerHello</tt> message, the client MUST include an <tt>Extension</tt> with <tt>extension_type</tt> equal to <tt>channel_id(TBD)</tt>. The <tt>extension_data</tt> of which has the following format:
+<p>If the server included a <tt>channel_id</tt> extension in its <tt>ServerHello</tt> message, the client MUST include, within an EncryptedExtensions message, an <tt>Extension</tt> with <tt>extension_type</tt> equal to <tt>channel_id(TBD)</tt>. The <tt>extension_data</tt> of which has the following format:
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 struct {
   opaque x[32];
@@ -358,16 +381,22 @@ struct {
 } ChannelIDExtension;
 </pre></div>
 <p>
-        The contents of each of <tt>x</tt>, <tt>y</tt>, <tt>r</tt> and <tt>s</tt> is a 32-byte, big-endian number. The <tt>x</tt> and <tt>y</tt> fields contain the affine coordinates of a <a class='info' href='#DSS'>P-256<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] curve point. The  <tt>r</tt> and <tt>s</tt> fields contain an <a class='info' href='#DSS'>ECDSA<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] signature by the corresponding private key of "TLS Channel ID signature\x00" followed by the handshake hash(es) prior to the <tt>EncryptedExtensions</tt> message.
+        The contents of each of <tt>x</tt>, <tt>y</tt>, <tt>r</tt> and <tt>s</tt> is a 32-byte, big-endian number. The <tt>x</tt> and <tt>y</tt> fields contain the affine coordinates of the client's Channel ID Q (i.e., a  <a class='info' href='#DSS'>P-256<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] curve point). The  <tt>r</tt> and <tt>s</tt> fields contain an <a class='info' href='#DSS'>ECDSA<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;FIPS 186-3: Digital Signature Standard,&rdquo; .</span><span>)</span></a> [DSS] signature by the corresponding private key over this US-ASCII strong (not including quotes, and where "\x00" represents an octet containing all zero bits):
+      
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+"TLS Channel ID signature\x00"
+</pre></div>
+<p>
+ followed by hashes of both the client-sent and server-sent handshake messages, as seen by the client, prior to the <tt>EncryptedExtensions</tt> message.
       
 </p>
 <p>
         Unlike many other TLS extensions, this extension does not establish properties of the session, only of the connection. When session resumption or <a class='info' href='#RFC5077'>session tickets<span> (</span><span class='info'>Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig, &ldquo;Transport Layer Security (TLS) Session Resumption without Server-Side State,&rdquo; January&nbsp;2008.</span><span>)</span></a> [RFC5077] are used, the previous contents of this extension are irrelevant and only the values in the new handshake messages are considered.
       
 </p>
-<a name="anchor4"></a><br /><hr />
+<a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5"></a><h3>5.&nbsp;
+<a name="rfc.section.6"></a><h3>6.&nbsp;
 Security Considerations</h3>
 
 <p>
@@ -375,7 +404,7 @@ Security Considerations</h3>
       
 </p>
 <p>
-        First, we wish to guarantee that we don't disclose the Channel ID to passive or active network attackers. We do this by sending a constant-length Channel ID under encryption. However, since the Channel ID may be transmitted before the server's Finished message is received, it's possible that the server isn't in possession of the certificate that it presented. In this situation, an active attacker could cause a Channel ID to be transmitted under a random key in a cipher suite of their choosing. Therefore we limit the permissible cipher suites to those where decrypting the message is infeasible.
+        First, we wish to guarantee that we don't disclose the Channel ID to passive or active network attackers. We do this by sending a constant-length Channel ID under encryption. However, since the Channel ID may be transmitted before the server's Finished message is received, it's possible that the server isn't in possession of the corresponding private key to the certificate that it presented. In this situation, an active attacker could cause a Channel ID to be transmitted under a random key in a cipher suite of their choosing. Therefore we limit the permissible cipher suites to those where decrypting the message is infeasible.
       
 </p>
 <p>
@@ -383,29 +412,64 @@ Security Considerations</h3>
       
 </p>
 <p>
-        Second, we wish to guarantee that none of the first three attackers can terminate/hijack a TLS connection and impersonate a Channel ID from that connection when connecting to the legitimate server. We assume that TLS provides sufficient security to prevent a connection from being hijacked once established by these attackers. An active attacker with a misissued certificate can successfully terminate the TLS connection and decrypt the Channel ID. However, as the signature covers the handshake hashes, and therefore the server's certificate, it wouldn't be accepted by the true server.
+        Second, we wish to guarantee that none of the first three attackers can terminate/hijack a TLS connection and impersonate a Channel ID from that connection when connecting to the legitimate server. We assume that TLS provides sufficient security to prevent these attackers from being able to hijack the TLS connection. An active attacker illegitimately in possession of a certificate for a server can successfully terminate a TLS connection destined for that server and decrypt the Channel ID. However, as the signature covers the handshake hashes, and therefore the server's certificate, it wouldn't be accepted by the true server.
       
 </p>
 <p>
         Against an attacker with the legitimate server's private key we can provide the second guarantee only if the legitimate server uses a forward-secret cipher suite, otherwise the attacker can hijack the connection.
       
 </p>
-<a name="anchor5"></a><br /><hr />
+<a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6"></a><h3>6.&nbsp;
+<a name="rfc.section.7"></a><h3>7.&nbsp;
+Use Cases</h3>
+
+<a name="anchor7"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.7.1"></a><h3>7.1.&nbsp;
+Channel-Bound Cookies</h3>
+
+<p>
+	  An HTTP application on the server can <em>channel-bind</em> its cookies by associating them with the Channel ID of the user-agent that the cookies are being set on. The server MAY then choose to consider cookies sent from the user-agent invalid if the Channel ID associated with the cookie does not match the Channel ID used by the user-agent when it sends the cookie back to the server.
+	
+</p>
+<p>
+	  Such a mismatch could occur when the cookie has been obtained from the legitimate user-agent and is now being sent by a client not in possession of the legitimate user-agent's Channel ID private key. The mismatch can also occur if the legitimate user-agent has changed the Channel ID it is using for the server, presumably due to the user requesting a Channel ID reset through the user-agent's user interface (see <a class='info' href='#privacy'>Section&nbsp;8<span> (</span><span class='info'>Privacy Considerations</span><span>)</span></a>). Such a user intervention is analogous to the user's removal of cookies from the user-agent, but instead of removing cookies, the cookies are being rendered invalid (in the eyes of the server).
+	
+</p>
+<a name="anchor8"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.7.2"></a><h3>7.2.&nbsp;
+Channel-Bound OAuth Tokens</h3>
+
+<p>
+	  Similarly to cookies, a server may choose to channel-bind OAuth tokens (or any other kind of authorization tokens) to the clients to which they are issued. The mechanism on the server remains the same (it associates the OAuth token with the client's Channel ID either by storing this information in a database, or by suitably encoding the information in the OAuth token itself), but the application-level protocol may be different: In addition to HTTP, OAuth tokens are used in protocols such as IMAP and XMPP.
+	
+</p>
+<a name="privacy"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8"></a><h3>8.&nbsp;
 Privacy Considerations</h3>
 
 <p>
-        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
+        The TLS layer does its part in protecting user privacy by transmitting the Channel ID public key under encryption. Higher levels of the stack must ensure that the same Channel ID is not used with different servers in such a way as to provide a linkable identifier. For example, a user-agent must use different Channel IDs for communicating with different servers. Because channel-bound cookies are an important use case for TLS Channel ID, and cookies can be set on top-level domains, it is RECOMMENDED that user-agents use the same Channel ID for servers within the same top-level domain, and different Channel IDs for different top-level domains. User-agents must also ensure that Channel ID state can be reset by the user in the same way as other identifiers, i.e. cookies. 
       
 </p>
 <p>
         However, there are some security concerns that could result in the disclosure of a client's Channel ID to a network attacker. This is covered in the Security Considerations section.
       
 </p>
-<a name="anchor6"></a><br /><hr />
+<p>
+	Clients that share an IP address can be disambiguated through their Channel IDs. This is analogous to protocols that use cookies (e.g., HTTP), which also allow disambiguation of user-agents behind proxies.
+      
+</p>
+<p>
+	Channel ID has been designed to provide privacy equivalent to that of cookies. User-agents SHOULD continue to meet this design goal at higher layers of the protocol stack. For example, if a user indicates that they would like to block third-party cookies (or if the user-agent has some sort of policy around when it blocks third-party cookies by default), then the user agent SHOULD NOT use Channel ID on third-party connections (or other connections through which the user-agent would refuse to send or accept cookies).
+      
+</p>
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.7"></a><h3>7.&nbsp;
+<a name="rfc.section.9"></a><h3>9.&nbsp;
 IANA Considerations</h3>
 
 <p>
@@ -418,12 +482,12 @@ IANA Considerations</h3>
 </p>
 <a name="rfc.references"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.8"></a><h3>8.&nbsp;
+<a name="rfc.section.10"></a><h3>10.&nbsp;
 References</h3>
 
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>8.1.&nbsp;Normative References</h3>
+<h3>10.1.&nbsp;Normative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="RFC2119">[RFC2119]</a></td>
 <td class="author-text"><a href="mailto:sob@harvard.edu">Bradner, S.</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>,&rdquo; BCP&nbsp;14, RFC&nbsp;2119, March&nbsp;1997 (<a href="http://www.rfc-editor.org/rfc/rfc2119.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc2119.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc2119.xml">XML</a>).</td></tr>
@@ -435,7 +499,7 @@ References</h3>
 
 <a name="rfc.references2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>8.2.&nbsp;Informative References</h3>
+<h3>10.2.&nbsp;Informative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="RFC5077">[RFC5077]</a></td>
 <td class="author-text">Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig, &ldquo;<a href="http://tools.ietf.org/html/rfc5077">Transport Layer Security (TLS) Session Resumption without Server-Side State</a>,&rdquo; RFC&nbsp;5077, January&nbsp;2008 (<a href="http://www.rfc-editor.org/rfc/rfc5077.txt">TXT</a>).</td></tr>
@@ -453,6 +517,38 @@ Acknowledgements</h3>
 <p>
         Dirk Balfanz, Wan-Teh Chang, Ryan Hamilton, Adam Langley, and Mayank Upadhyay.
       
+</p>
+<a name="anchor12"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
+History of Changes</h3>
+
+<a name="anchor13"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.B.1"></a><h3>B.1.&nbsp;
+Version 01</h3>
+
+<p>
+	  </p>
+<ul class="text">
+<li>
+	      Some clarifications, mostly around the Channel ID and session state.
+	    
+</li>
+<li>
+	      Added a section on Use Cases.
+	    
+</li>
+<li>
+	      Expanded the Privacy Considerations sections to include discussion of third-party connections in HTTP user-agents. 
+	    
+</li>
+<li>
+	      Fixed some typos.
+	    
+</li>
+</ul><p>
+	
 </p>
 <a name="rfc.authors"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
